@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="format-detection" content="telephone=no" />
+<title>理财净值助手</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #eef1f7;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    color: #1b2330;
+    display: flex;
+    justify-content: center;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    background: #f4f6fa;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(27, 35, 48, 0.08);
+  }
+  .topbar {
+    flex-shrink: 0;
+    padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
+    background: #ffffff;
+    border-bottom: 1px solid #eef1f6;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .topbar .title { font-size: 16px; font-weight: 600; }
+  .topbar .stamp { font-size: 10.5px; color: #a3acba; }
+  .content { flex: 1; overflow-y: auto; padding: 12px 12px 84px; -webkit-overflow-scrolling: touch; }
+  .content::-webkit-scrollbar { width: 0; }
+
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(27, 35, 48, 0.06); padding: 13px; }
+  .hero { background: linear-gradient(135deg, #1769e0 0%, #3f8bf0 100%); color: #fff; display: flex; flex-direction: column; gap: 4px; }
+  .hero-top { display: flex; align-items: baseline; justify-content: space-between; }
+  .hero-title { font-size: 21px; font-weight: 700; }
+  .hero-count { font-size: 12px; background: rgba(255,255,255,0.18); padding: 2px 9px; border-radius: 999px; }
+  .hero-sub { font-size: 12px; opacity: 0.92; }
+  .hero-tip { font-size: 10.5px; opacity: 0.78; line-height: 1.5; }
+
+  .sort-bar { display: flex; gap: 8px; overflow-x: auto; margin: 12px 0 2px; padding-bottom: 2px; }
+  .sort-bar::-webkit-scrollbar { height: 0; }
+  .sort-chip {
+    flex-shrink: 0; display: inline-flex; align-items: center; padding: 7px 13px; border-radius: 999px;
+    background: #fff; color: #5a6779; font-size: 12.5px; box-shadow: 0 1px 5px rgba(27,35,48,0.05);
+  }
+  .sort-chip.active { background: #1769e0; color: #fff; }
+
+  .product-card { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+  .product-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .product-name { font-size: 14.5px; font-weight: 600; line-height: 1.4; }
+  .product-org { font-size: 10.5px; color: #8a94a6; margin-top: 3px; display: block; }
+  .product-annual { text-align: right; min-width: 76px; flex-shrink: 0; }
+  .annual-value { font-size: 20px; font-weight: 700; line-height: 1.2; display: block; }
+  .annual-label { font-size: 10.5px; color: #8a94a6; }
+  .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); background: #f7f9fc; border-radius: 9px; padding: 10px 4px; }
+  .metric { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 1px; }
+  .metric-value { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .metric-label { font-size: 9.5px; color: #8a94a6; text-align: center; white-space: nowrap; }
+  .product-foot { display: flex; justify-content: space-between; font-size: 10px; color: #a3acba; }
+
+  .up { color: #e8443a; }
+  .down { color: #12a150; }
+  .flat { color: #6b7688; }
+
+  .summary-card { background: linear-gradient(135deg, #1b2330 0%, #2f3d52 100%); color: #fff; display: flex; flex-direction: column; gap: 4px; }
+  .summary-label { font-size: 11.5px; opacity: 0.78; }
+  .summary-value { font-size: 32px; font-weight: 700; letter-spacing: 0.5px; }
+  .summary-grid { display: flex; margin-top: 9px; background: rgba(255,255,255,0.12); border-radius: 9px; padding: 11px 0; }
+  .summary-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .summary-cell .v { font-size: 14px; font-weight: 600; }
+  .summary-cell .l { font-size: 10px; opacity: 0.75; }
+  .summary-card .up { color: #ff8a80; }
+  .summary-card .down { color: #6ee7a8; }
+  .summary-foot { display: flex; justify-content: space-between; margin-top: 7px; font-size: 10.5px; opacity: 0.85; }
+
+  .section-title { font-size: 13.5px; font-weight: 600; margin: 15px 2px 8px; }
+  .holding-card { margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
+  .holding-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .holding-name { font-size: 13.5px; font-weight: 600; line-height: 1.4; flex: 1; }
+  .holding-rate { font-size: 14.5px; font-weight: 700; flex-shrink: 0; }
+  .holding-share { font-size: 10.5px; color: #8a94a6; }
+  .holding-grid { display: flex; background: #f7f9fc; border-radius: 9px; padding: 10px 0; margin-top: 3px; }
+  .grid-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .grid-cell .v { font-size: 13px; font-weight: 600; }
+  .grid-cell .l { font-size: 10px; color: #8a94a6; }
+  .holding-foot { display: flex; justify-content: space-between; font-size: 10px; color: #a3acba; }
+  .disclaimer { margin: 8px 4px 0; font-size: 10.5px; color: #a3acba; line-height: 1.6; }
+
+  .state-card { background: #fff; border-radius: 12px; padding: 34px 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(27,35,48,0.06); }
+  .state-icon { font-size: 28px; color: #b6bfcd; }
+  .state-title { font-size: 14.5px; font-weight: 600; }
+  .state-desc { font-size: 11.5px; color: #8a94a6; text-align: center; line-height: 1.65; }
+
+  .primary-btn {
+    margin-top: 12px; background: #1769e0; color: #fff; border: none; border-radius: 999px;
+    padding: 11px 24px; font-size: 13.5px; font-family: inherit;
+  }
+
+  .total-text { font-size: 11.5px; color: #8a94a6; margin: 2px 0 8px 4px; display: block; }
+  .txn-card { margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
+  .txn-head { display: flex; align-items: center; gap: 6px; }
+  .badge { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
+  .badge-buy { background: #fdecea; color: #e8443a; }
+  .badge-sell { background: #e8f7ee; color: #12a150; }
+  .txn-name { flex: 1; font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .txn-amount { font-size: 14.5px; font-weight: 700; flex-shrink: 0; }
+  .txn-share { font-size: 10.5px; color: #8a94a6; }
+  .txn-grid { display: flex; background: #f7f9fc; border-radius: 9px; padding: 10px 0; }
+  .txn-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0 3px; }
+  .txn-cell .v { font-size: 11.5px; font-weight: 600; text-align: center; }
+  .txn-cell .l { font-size: 9.5px; color: #8a94a6; text-align: center; }
+  .txn-delete { align-self: flex-end; font-size: 10.5px; color: #a3acba; }
+
+  .tabbar {
+    position: absolute; left: 0; right: 0; bottom: 0; height: calc(56px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    display: flex; background: #fff; border-top: 1px solid #eef1f6;
+  }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; color: #8a94a6; }
+  .tab .dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; }
+  .tab.active { color: #1769e0; font-weight: 600; }
+  .tab.active .dot { background: #1769e0; }
+
+  .fab {
+    position: absolute; right: 16px; bottom: calc(74px + env(safe-area-inset-bottom));
+    width: 52px; height: 52px; border-radius: 50%; background: #1769e0; color: #fff;
+    font-size: 26px; line-height: 52px; text-align: center; box-shadow: 0 6px 16px rgba(23,105,224,0.4);
+    z-index: 5;
+  }
+
+  .mask { position: absolute; inset: 0; background: rgba(17,24,34,0.45); z-index: 10; display: none; }
+  .mask.show { display: block; }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0;
+    padding: 15px 14px calc(18px + env(safe-area-inset-bottom)); z-index: 11; display: none;
+    flex-direction: column; gap: 9px; max-height: 90%;
+  }
+  .sheet.show { display: flex; }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; }
+  .sheet-title { font-size: 15.5px; font-weight: 600; }
+  .sheet-close { font-size: 12.5px; color: #8a94a6; }
+  .sheet-body { overflow-y: auto; display: flex; flex-direction: column; gap: 9px; }
+  .type-switch { display: flex; background: #eef2f8; border-radius: 999px; padding: 3px; }
+  .type-item { flex: 1; text-align: center; font-size: 13.5px; color: #5a6779; padding: 8px 0; border-radius: 999px; }
+  .type-item.active { background: #fff; font-weight: 600; box-shadow: 0 1px 5px rgba(27,35,48,0.08); }
+  .type-item.buy.active { color: #e8443a; }
+  .type-item.sell.active { color: #12a150; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 11.5px; color: #5a6779; }
+  .field .req { color: #e8443a; }
+  .field input, .field select {
+    background: #f4f6fa; border: none; border-radius: 8px; padding: 11px 11px; font-size: 13.5px;
+    font-family: inherit; color: #1b2330; width: 100%; appearance: none;
+  }
+  .field .hint { font-size: 10px; color: #8a94a6; line-height: 1.5; }
+  .field-row { display: flex; gap: 8px; }
+  .field-row .field { flex: 1; }
+  .preview-box { background: #eef4ff; border-radius: 8px; padding: 10px 11px; font-size: 11.5px; color: #1769e0; line-height: 1.5; }
+  .form-error { background: #fdecea; color: #e8443a; border-radius: 7px; padding: 9px 11px; font-size: 11.5px; display: none; }
+  .form-error.show { display: block; }
+  .trend-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f3f8; font-size: 12.5px; }
+  .trend-row .d { flex: 1; color: #5a6779; }
+  .trend-row .n { flex: 1; text-align: center; font-weight: 600; }
+  .trend-row .a { flex: 1; text-align: right; font-size: 10.5px; color: #8a94a6; }
+  .toast {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    background: rgba(17,24,34,0.82); color: #fff; padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; z-index: 30; opacity: 0; pointer-events: none; transition: opacity 0.22s;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <span class="title" id="pageTitle">净值看板</span>
+    <span class="stamp" id="stamp"></span>
+  </div>
+  <div class="content" id="content"></div>
+  <div class="tabbar">
+    <div class="tab active" data-tab="dashboard"><span>净值看板</span><span class="dot"></span></div>
+    <div class="tab" data-tab="holdings"><span>我的持仓</span><span class="dot"></span></div>
+    <div class="tab" data-tab="transactions"><span>交易记录</span><span class="dot"></span></div>
+  </div>
+  <div class="fab" id="fab" style="display:none">＋</div>
+  <div class="mask" id="mask"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+const NAV_DATA = /*__NAV_DATA__*/ null;
+
+/* ========== 指标计算（与电脑端口径一致） ========== */
+const ANNUALIZE_DAYS = 365, W7 = 7, W14 = 14, DAY = 86400000;
+const toTs = d => Date.parse(d + 'T00:00:00Z');
+const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : null; };
+
+function calcIndicators(rowsAsc) {
+  const rows = rowsAsc || [], n = rows.length;
+  if (n < 2) return null;
+  const nav = i => num(rows[i].nav);
+  const val = i => { const a = num(rows[i].acumlt); return a && a > 0 ? a : nav(i); };
+  const last = n - 1, navToday = nav(last), navPrev = nav(last - 1);
+  if (!navToday || !navPrev) return null;
+  const daily = [];
+  for (let i = 1; i < n; i++) {
+    const a = nav(i), b = nav(i - 1);
+    if (!a || !b) { daily.push(null); continue; }
+    const d = num(rows[i].wan);
+    daily.push(d && d !== 0 ? d : ((a - b) / b) * 10000);
+  }
+  const todayWan = daily.length ? daily[daily.length - 1] : null;
+  const lastTs = toTs(rows[last].date);
+  const winStart = lastTs - (W7 - 1) * DAY;
+  let sum7 = 0, cnt7 = 0;
+  for (let i = 1; i < n; i++) {
+    if (toTs(rows[i].date) < winStart) continue;
+    const v = daily[i - 1];
+    if (v !== null && v !== undefined) { sum7 += v; cnt7++; }
+  }
+  const wan7 = cnt7 ? sum7 / W7 : null;
+  const baseIdx = days => {
+    const target = lastTs - days * DAY;
+    for (let i = last - 1; i >= 0; i--) if (toTs(rows[i].date) <= target) return i;
+    return -1;
+  };
+  const annualize = days => {
+    const i = baseIdx(days); if (i < 0) return null;
+    const v0 = val(i), v1 = val(last);
+    const span = (lastTs - toTs(rows[i].date)) / DAY;
+    if (!v0 || !v1 || !span) return null;
+    return ((v1 / v0 - 1) / span) * ANNUALIZE_DAYS * 100;
+  };
+  const d7 = num(rows[last].y7);
+  const a7 = d7 && d7 !== 0 ? d7 : annualize(W7);
+  const r4 = v => (v === null || v === undefined || !Number.isFinite(v) ? null : Number(v.toFixed(4)));
+  return {
+    date: rows[last].date, nav: navToday, acumlt: num(rows[last].acumlt),
+    wanToday: r4(todayWan), wan7: r4(wan7), annual7: r4(a7), annual14: r4(annualize(W14)),
+  };
+}
+
+const PRODUCTS = (NAV_DATA.products || []).map(p => ({
+  code: p.code, name: p.name, orgName: p.orgName, updatedAt: p.updatedAt,
+  shares: (p.shares || []).map(s => {
+    const rows = s.rows.slice().sort((a, b) => (a.date < b.date ? -1 : 1));
+    return { code: s.code, rows, ind: calcIndicators(rows) };
+  }),
+}));
+
+function findShare(code) {
+  for (const p of PRODUCTS) for (const s of p.shares) if (s.code === code) return { p, s };
+  return null;
+}
+function latestNav(code) {
+  const f = findShare(code); if (!f || !f.s.rows.length) return null;
+  const last = f.s.rows[f.s.rows.length - 1];
+  return { nav: parseFloat(last.nav), date: last.date };
+}
+function navOnDate(code, date) {
+  const f = findShare(code); if (!f) return null;
+  for (let i = f.s.rows.length - 1; i >= 0; i--) {
+    if (f.s.rows[i].date <= date) return { nav: parseFloat(f.s.rows[i].nav), date: f.s.rows[i].date };
+  }
+  return null;
+}
+
+/* ========== 交易与持仓（保存在本机浏览器，不上传） ========== */
+const STORE_KEY = 'licai.share.txns.v1';
+const readTxns = () => { try { const v = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
+const writeTxns = rows => localStorage.setItem(STORE_KEY, JSON.stringify(rows));
+
+function computePortfolio(txns) {
+  const map = {};
+  txns.slice().sort((a, b) => (a.confirmDate === b.confirmDate ? (a.createdAt || 0) - (b.createdAt || 0) : (a.confirmDate < b.confirmDate ? -1 : 1)))
+    .forEach(t => {
+      if (!map[t.shareCode]) map[t.shareCode] = { productName: t.productName, shareCode: t.shareCode, shares: 0, cost: 0, realized: 0 };
+      const h = map[t.shareCode];
+      if (t.type === 'buy') { h.shares += t.shares; h.cost += t.amount; return; }
+      const avg = h.shares > 0 ? h.cost / h.shares : 0;
+      const out = Math.min(t.shares, h.shares);
+      h.realized += (t.shares * t.nav - (t.fee || 0)) - out * avg;
+      h.shares -= out; h.cost -= out * avg;
+    });
+  const holdings = [];
+  Object.values(map).forEach(h => {
+    if (h.shares <= 0.0001) return;
+    const latest = latestNav(h.shareCode) || { nav: 0, date: '' };
+    const mv = h.shares * latest.nav, pnl = mv - h.cost;
+    holdings.push({
+      productName: h.productName, shareCode: h.shareCode, shares: h.shares, avgCost: h.cost / h.shares,
+      cost: h.cost, nav: latest.nav, navDate: latest.date, marketValue: mv, pnl,
+      rate: h.cost > 0 ? (pnl / h.cost) * 100 : 0, realized: h.realized,
+    });
+  });
+  holdings.sort((a, b) => b.marketValue - a.marketValue);
+  const s = holdings.reduce((a, h) => ({ mv: a.mv + h.marketValue, cost: a.cost + h.cost, pnl: a.pnl + h.pnl, realized: a.realized + h.realized }), { mv: 0, cost: 0, pnl: 0, realized: 0 });
+  s.rate = s.cost > 0 ? (s.pnl / s.cost) * 100 : 0;
+  return { holdings, summary: s };
+}
+
+/* ========== 渲染 ========== */
+const el = id => document.getElementById(id);
+const content = el('content'), pageTitle = el('pageTitle'), fab = el('fab'), stamp = el('stamp');
+let sortKey = 'date', sortDesc = true;
+let toastTimer = null;
+
+const money = v => (v > 0 ? '+' : '') + Number(v).toFixed(2);
+const pct = v => { if (v === null || v === undefined) return '-'; const r = Math.round(v * 100) / 100; if (r === 0) return '0.00%'; return (r > 0 ? '+' : '') + r.toFixed(2) + '%'; };
+const cls = v => (v === null || v === undefined || !Number.isFinite(Number(v)) || Number(v) === 0 ? 'flat' : Number(v) > 0 ? 'up' : 'down');
+
+function toast(msg) {
+  const node = el('toast');
+  node.textContent = msg;
+  node.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => node.classList.remove('show'), 1500);
+}
+
+const SORTS = [
+  { key: 'date', label: '最新净值日' },
+  { key: 'annual7', label: '7日年化' },
+  { key: 'annual14', label: '14日年化' },
+  { key: 'wanToday', label: '当日万收' },
+  { key: 'wan7', label: '7日日均万收' },
+];
+
+function renderDashboard() {
+  pageTitle.textContent = '净值看板';
+  stamp.textContent = '数据 ' + (NAV_DATA.generatedAt || '');
+  fab.style.display = 'none';
+  const items = [];
+  PRODUCTS.forEach(p => p.shares.forEach(s => {
+    if (!s.ind) return;
+    items.push({
+      key: p.code + s.code, name: p.name, orgName: p.orgName, shareCode: s.code,
+      date: s.ind.date, nav: s.ind.nav.toFixed(4),
+      wanToday: s.ind.wanToday, wan7: s.ind.wan7,
+      annual7: s.ind.annual7, annual14: s.ind.annual14, updatedAt: p.updatedAt,
+    });
+  }));
+  items.sort((a, b) => {
+    const x = a[sortKey], y = b[sortKey];
+    const xe = x === null || x === undefined || x === '', ye = y === null || y === undefined || y === '';
+    if (xe && ye) return 0; if (xe) return 1; if (ye) return -1;
+    if (typeof x === 'string' || typeof y === 'string') {
+      const r = String(x) < String(y) ? -1 : String(x) > String(y) ? 1 : 0;
+      return sortDesc ? -r : r;
+    }
+    if (x === y) return 0;
+    return sortDesc ? y - x : x - y;
+  });
+
+  content.innerHTML = `
+    <div class="card hero">
+      <div class="hero-top"><span class="hero-title">理财净值</span><span class="hero-count">${PRODUCTS.length} 个产品</span></div>
+      <span class="hero-sub">数据时间 ${NAV_DATA.generatedAt || '-'}</span>
+      <span class="hero-tip">净值按 T+1 披露，节假日顺延；年化口径 365 日、日历窗口</span>
+    </div>
+    <div class="sort-bar">
+      ${SORTS.map(s => `<div class="sort-chip ${s.key === sortKey ? 'active' : ''}" data-sort="${s.key}">${s.label}${s.key === sortKey ? (sortDesc ? ' ↓' : ' ↑') : ''}</div>`).join('')}
+    </div>
+    ${items.map(it => `
+      <div class="card product-card" data-share="${it.shareCode}" data-title="${it.name.replace(/"/g, '&quot;')}">
+        <div class="product-head">
+          <div>
+            <div class="product-name">${it.name}</div>
+            <span class="product-org">${it.orgName} · ${it.shareCode}</span>
+          </div>
+          <div class="product-annual">
+            <span class="annual-value ${cls(it.annual7)}">${pct(it.annual7)}</span>
+            <span class="annual-label">7日年化</span>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric"><span class="metric-value">${it.nav}</span><span class="metric-label">单位净值</span></div>
+          <div class="metric"><span class="metric-value ${cls(it.wanToday)}">${it.wanToday === null ? '-' : Number(it.wanToday).toFixed(2)}</span><span class="metric-label">当日万收</span></div>
+          <div class="metric"><span class="metric-value ${cls(it.wan7)}">${it.wan7 === null ? '-' : Number(it.wan7).toFixed(2)}</span><span class="metric-label">7日日均万收</span></div>
+          <div class="metric"><span class="metric-value ${cls(it.annual14)}">${pct(it.annual14)}</span><span class="metric-label">14日年化</span></div>
+        </div>
+        <div class="product-foot"><span>净值日期 ${it.date}</span><span>获取 ${it.updatedAt}</span></div>
+      </div>`).join('')}
+  `;
+  content.querySelectorAll('[data-sort]').forEach(n => n.addEventListener('click', () => {
+    const key = n.dataset.sort;
+    if (key === sortKey) sortDesc = !sortDesc; else { sortKey = key; sortDesc = true; }
+    renderDashboard();
+  }));
+  content.querySelectorAll('.product-card').forEach(n => n.addEventListener('click', () => openTrend(n.dataset.share, n.dataset.title)));
+}
+
+function openTrend(shareCode, title) {
+  const f = findShare(shareCode); if (!f) return;
+  const rows = f.s.rows.slice(-12).reverse();
+  showSheet(`
+    <div class="sheet-head"><span class="sheet-title">近 12 期净值</span><span class="sheet-close" data-close>关闭</span></div>
+    <div style="font-size:11px;color:#8a94a6">${title}</div>
+    <div class="sheet-body">
+      ${rows.map(r => `<div class="trend-row"><span class="d">${r.date}</span><span class="n">${Number(r.nav).toFixed(4)}</span><span class="a">累计 ${r.acumlt === null || r.acumlt === undefined ? '-' : Number(r.acumlt).toFixed(4)}</span></div>`).join('')}
+    </div>`);
+}
+
+function renderHoldings() {
+  pageTitle.textContent = '我的持仓';
+  stamp.textContent = '';
+  fab.style.display = 'none';
+  const pf = computePortfolio(readTxns());
+  if (!pf.holdings.length) {
+    content.innerHTML = `
+      <div class="state-card">
+        <span class="state-icon">○</span>
+        <span class="state-title">还没有持仓</span>
+        <span class="state-desc">在「交易记录」里录入买入交易，这里会自动算出成本、市值和盈亏</span>
+        <button class="primary-btn" data-goto="transactions">去录入交易</button>
+      </div>`;
+    content.querySelector('[data-goto]').addEventListener('click', () => switchTab('transactions'));
+    return;
+  }
+  const s = pf.summary;
+  content.innerHTML = `
+    <div class="card summary-card">
+      <span class="summary-label">持仓总市值（元）</span>
+      <span class="summary-value">${s.mv.toFixed(2)}</span>
+      <div class="summary-grid">
+        <div class="summary-cell"><span class="v">${s.cost.toFixed(2)}</span><span class="l">总成本</span></div>
+        <div class="summary-cell"><span class="v ${cls(s.pnl)}">${money(s.pnl)}</span><span class="l">浮动盈亏</span></div>
+        <div class="summary-cell"><span class="v ${cls(s.rate)}">${pct(s.rate)}</span><span class="l">收益率</span></div>
+      </div>
+      <div class="summary-foot"><span>已实现 ${money(s.realized)}</span><span>累计收益 ${money(s.pnl + s.realized)}</span></div>
+    </div>
+    <div class="section-title">持仓明细</div>
+    ${pf.holdings.map(h => `
+      <div class="card holding-card">
+        <div class="holding-head"><span class="holding-name">${h.productName}</span><span class="holding-rate ${cls(h.rate)}">${pct(h.rate)}</span></div>
+        <span class="holding-share">${h.shareCode}</span>
+        <div class="holding-grid">
+          <div class="grid-cell"><span class="v">${h.shares.toFixed(2)}</span><span class="l">持有份额</span></div>
+          <div class="grid-cell"><span class="v">${h.avgCost.toFixed(4)}</span><span class="l">成本价</span></div>
+          <div class="grid-cell"><span class="v">${h.nav.toFixed(4)}</span><span class="l">最新净值</span></div>
+        </div>
+        <div class="holding-foot"><span>市值 ${h.marketValue.toFixed(2)}</span><span>浮盈 ${money(h.pnl)}</span><span>净值日 ${h.navDate}</span></div>
+      </div>`).join('')}
+    <div class="disclaimer">持仓数据只保存在你的手机/电脑浏览器里，不上传服务器；换设备或清理浏览器数据会丢失。</div>`;
+}
+
+function renderTransactions() {
+  pageTitle.textContent = '交易记录';
+  stamp.textContent = '';
+  fab.style.display = 'block';
+  const txns = readTxns();
+  if (!txns.length) {
+    content.innerHTML = `
+      <div class="state-card">
+        <span class="state-icon">＋</span>
+        <span class="state-title">还没有交易记录</span>
+        <span class="state-desc">点击右下角按钮，录入第一笔买入</span>
+      </div>`;
+    return;
+  }
+  content.innerHTML = `
+    <span class="total-text">共 ${txns.length} 笔交易</span>
+    ${txns.map(t => {
+      const isBuy = t.type === 'buy';
+      return `<div class="card txn-card">
+        <div class="txn-head">
+          <span class="badge ${isBuy ? 'badge-buy' : 'badge-sell'}">${isBuy ? '买入' : '赎回'}</span>
+          <span class="txn-name">${t.productName}</span>
+          <span class="txn-amount ${isBuy ? 'up' : 'down'}">${(isBuy ? '-' : '+') + t.amount.toFixed(2)}</span>
+        </div>
+        <span class="txn-share">${t.shareCode}</span>
+        <div class="txn-grid">
+          <div class="txn-cell"><span class="v">${t.applyDate} → ${t.confirmDate}</span><span class="l">申请日 → 确认日</span></div>
+          <div class="txn-cell"><span class="v">${t.nav.toFixed(4)}</span><span class="l">确认净值</span></div>
+          <div class="txn-cell"><span class="v">${t.shares.toFixed(2)} 份</span><span class="l">${t.fee ? '手续费 ' + t.fee.toFixed(2) : '无手续费'}</span></div>
+        </div>
+        <span class="txn-delete" data-del="${t.id}">删除这笔</span>
+      </div>`;
+    }).join('')}`;
+  content.querySelectorAll('[data-del]').forEach(n => n.addEventListener('click', () => {
+    if (!confirm('删除这笔交易？持仓与收益会重新计算。')) return;
+    writeTxns(readTxns().filter(t => t.id !== n.dataset.del));
+    renderTransactions();
+    toast('已删除');
+  }));
+}
+
+function openEditor() {
+  const options = [];
+  PRODUCTS.forEach(p => p.shares.forEach(s => options.push({ code: s.code, name: p.name, label: p.name + '（' + s.code + '）' })));
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  const state = { type: 'buy', optionIndex: -1 };
+
+  showSheet(`
+    <div class="sheet-head"><span class="sheet-title">录入交易</span><span class="sheet-close" data-close>取消</span></div>
+    <div class="type-switch">
+      <div class="type-item buy active" data-type="buy">买入</div>
+      <div class="type-item sell" data-type="sell">赎回</div>
+    </div>
+    <div class="form-error" id="formError"></div>
+    <div class="sheet-body">
+      <div class="field">
+        <label>产品份额 <span class="req">*</span></label>
+        <select id="optSelect"><option value="-1">请选择产品</option>${options.map((o, i) => `<option value="${i}">${o.label}</option>`).join('')}</select>
+        <span class="hint" id="navHint"></span>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>申请日期</label><input type="date" id="applyDate" value="${todayStr}" /></div>
+        <div class="field"><label>确认日期</label><input type="date" id="confirmDate" value="${todayStr}" /></div>
+      </div>
+      <div class="field"><label>确认净值 <span class="req">*</span></label><input type="number" step="0.0001" id="navInput" placeholder="选完日期自动带出，可手改" /></div>
+      <div class="field" id="amountField"><label>买入金额（元）<span class="req">*</span></label><input type="number" step="0.01" id="amountInput" placeholder="例如 10000" /></div>
+      <div class="field" id="sharesField" style="display:none"><label>赎回份额 <span class="req">*</span></label><input type="number" step="0.01" id="sharesInput" placeholder="例如 1000" /></div>
+      <div class="field"><label>手续费（元）</label><input type="number" step="0.01" id="feeInput" placeholder="可不填，默认 0" /></div>
+      <div class="preview-box" id="previewBox" style="display:none"></div>
+    </div>
+    <button class="primary-btn" id="saveBtn">保存</button>`);
+
+  const q = id => document.getElementById(id);
+  const err = q('formError');
+
+  function refresh() {
+    const nav = parseFloat(q('navInput').value);
+    const fee = parseFloat(q('feeInput').value) || 0;
+    const box = q('previewBox');
+    if (!Number.isFinite(nav) || nav <= 0) { box.style.display = 'none'; return; }
+    if (state.type === 'buy') {
+      const amount = parseFloat(q('amountInput').value);
+      if (!Number.isFinite(amount) || amount <= 0) { box.style.display = 'none'; return; }
+      box.style.display = 'block';
+      box.textContent = `预计确认份额 ${((amount - fee) / nav).toFixed(2)} 份（金额 ${amount.toFixed(2)} - 手续费 ${fee.toFixed(2)}）`;
+      return;
+    }
+    const shares = parseFloat(q('sharesInput').value);
+    if (!Number.isFinite(shares) || shares <= 0) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    box.textContent = `预计到账金额 ${(shares * nav - fee).toFixed(2)} 元（${shares.toFixed(2)} 份 × ${nav.toFixed(4)} - 手续费 ${fee.toFixed(2)}）`;
+  }
+
+  function applyNav() {
+    if (state.optionIndex < 0) return;
+    const found = navOnDate(options[state.optionIndex].code, q('confirmDate').value);
+    if (found) {
+      q('navInput').value = found.nav.toFixed(4);
+      q('navHint').textContent = '已按 ' + found.date + ' 净值自动带出';
+      refresh();
+    }
+  }
+
+  q('optSelect').addEventListener('change', e => {
+    state.optionIndex = Number(e.target.value);
+    const opt = options[state.optionIndex];
+    if (opt) {
+      const latest = latestNav(opt.code);
+      q('navHint').textContent = latest ? '最新披露 ' + latest.date + '：' + latest.nav.toFixed(4) : '该份额暂无净值数据';
+      applyNav();
+    }
+  });
+  q('confirmDate').addEventListener('change', applyNav);
+  q('applyDate').addEventListener('change', e => {
+    if (q('confirmDate').value < e.target.value) { q('confirmDate').value = e.target.value; applyNav(); }
+  });
+  ['navInput', 'amountInput', 'sharesInput', 'feeInput'].forEach(id => q(id).addEventListener('input', refresh));
+
+  document.querySelectorAll('.type-item').forEach(n => n.addEventListener('click', () => {
+    state.type = n.dataset.type;
+    document.querySelectorAll('.type-item').forEach(x => x.classList.toggle('active', x === n));
+    q('amountField').style.display = state.type === 'buy' ? 'flex' : 'none';
+    q('sharesField').style.display = state.type === 'sell' ? 'flex' : 'none';
+    refresh();
+  }));
+
+  q('saveBtn').addEventListener('click', () => {
+    const opt = options[state.optionIndex];
+    const fail = msg => { err.textContent = msg; err.classList.add('show'); };
+    err.classList.remove('show');
+    if (!opt) return fail('请选择产品份额');
+    const applyDate = q('applyDate').value, confirmDate = q('confirmDate').value;
+    if (!applyDate || !confirmDate) return fail('请填写申请日期和确认日期');
+    if (confirmDate < applyDate) return fail('确认日期不能早于申请日期');
+    const nav = parseFloat(q('navInput').value);
+    if (!Number.isFinite(nav) || nav <= 0) return fail('确认净值必须大于 0');
+    const fee = Math.max(0, parseFloat(q('feeInput').value) || 0);
+    let shares, amount;
+    if (state.type === 'buy') {
+      amount = parseFloat(q('amountInput').value);
+      if (!Number.isFinite(amount) || amount - fee <= 0) return fail('买入金额必须大于 0 且大于手续费');
+      shares = (amount - fee) / nav;
+    } else {
+      shares = parseFloat(q('sharesInput').value);
+      if (!Number.isFinite(shares) || shares <= 0) return fail('赎回份额必须大于 0');
+      const held = computePortfolio(readTxns()).holdings.find(h => h.shareCode === opt.code);
+      if (held && shares > held.shares + 0.0001) return fail('赎回份额超过持仓（当前 ' + held.shares.toFixed(2) + ' 份）');
+      amount = shares * nav - fee;
+    }
+    const rows = readTxns();
+    rows.unshift({
+      id: String(Date.now()) + '-' + Math.floor(Math.random() * 1000),
+      type: state.type, productCode: opt.code, productName: opt.name, shareCode: opt.code,
+      applyDate, confirmDate, nav, fee: Number(fee.toFixed(2)),
+      shares: Number(shares.toFixed(2)), amount: Number(amount.toFixed(2)), createdAt: Date.now(),
+    });
+    writeTxns(rows);
+    hideSheet();
+    renderTransactions();
+    toast('已保存');
+  });
+}
+
+function showSheet(html) {
+  const sheet = el('sheet');
+  sheet.innerHTML = html;
+  sheet.classList.add('show');
+  el('mask').classList.add('show');
+  sheet.querySelectorAll('[data-close]').forEach(n => n.addEventListener('click', hideSheet));
+}
+function hideSheet() {
+  el('sheet').classList.remove('show');
+  el('mask').classList.remove('show');
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(n => n.classList.toggle('active', n.dataset.tab === tab));
+  hideSheet();
+  if (tab === 'dashboard') renderDashboard();
+  else if (tab === 'holdings') renderHoldings();
+  else renderTransactions();
+  content.scrollTop = 0;
+}
+
+document.querySelectorAll('.tab').forEach(n => n.addEventListener('click', () => switchTab(n.dataset.tab)));
+el('fab').addEventListener('click', openEditor);
+el('mask').addEventListener('click', hideSheet);
+
+switchTab('dashboard');
+</script>
+</body>
+</html>

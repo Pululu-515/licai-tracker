@@ -1,0 +1,477 @@
+{
+  "prodRegCode": "Z7001626000675",
+  "prodName": "招银理财招睿添利日开25号固定收益类理财计划",
+  "orgName": "招银理财有限责任公司",
+  "source": "cmbchinawm.com（招银理财官网）",
+  "lastUpdated": "2026/11/6 16:00:03",
+  "lastChangeAt": "2026/11/6 08:18:05",
+  "valuesSig": "f64b447e81a8fdc6",
+  "shares": {
+    "132152A": {
+      "rows": [
+        {
+          "date": "2026-07-29",
+          "nav": "1.0000",
+          "acumlt": "1.0000",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-07-30",
+          "nav": "1.0001",
+          "acumlt": "1.0001",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-07-31",
+          "nav": "1.0001",
+          "acumlt": "1.0001",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-03",
+          "nav": "1.0002",
+          "acumlt": "1.0002",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-04",
+          "nav": "1.0002",
+          "acumlt": "1.0002",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-05",
+          "nav": "1.0002",
+          "acumlt": "1.0002",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-06",
+          "nav": "1.0003",
+          "acumlt": "1.0003",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-07",
+          "nav": "1.0012",
+          "acumlt": "1.0012",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-10",
+          "nav": "1.0013",
+          "acumlt": "1.0013",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-11",
+          "nav": "1.0013",
+          "acumlt": "1.0013",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-12",
+          "nav": "1.0013",
+          "acumlt": "1.0013",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-13",
+          "nav": "1.0014",
+          "acumlt": "1.0014",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-14",
+          "nav": "1.0014",
+          "acumlt": "1.0014",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-17",
+          "nav": "1.0015",
+          "acumlt": "1.0015",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-18",
+          "nav": "1.0015",
+          "acumlt": "1.0015",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-19",
+          "nav": "1.0015",
+          "acumlt": "1.0015",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-20",
+          "nav": "1.0016",
+          "acumlt": "1.0016",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-21",
+          "nav": "1.0016",
+          "acumlt": "1.0016",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-24",
+          "nav": "1.0017",
+          "acumlt": "1.0017",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-25",
+          "nav": "1.0017",
+          "acumlt": "1.0017",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-26",
+          "nav": "1.0017",
+          "acumlt": "1.0017",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-27",
+          "nav": "1.0018",
+          "acumlt": "1.0018",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-28",
+          "nav": "1.0018",
+          "acumlt": "1.0018",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-31",
+          "nav": "1.0019",
+          "acumlt": "1.0019",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-01",
+          "nav": "1.0019",
+          "acumlt": "1.0019",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-02",
+          "nav": "1.0019",
+          "acumlt": "1.0019",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-03",
+          "nav": "1.0020",
+          "acumlt": "1.0020",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-04",
+          "nav": "1.0020",
+          "acumlt": "1.0020",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-07",
+          "nav": "1.0021",
+          "acumlt": "1.0021",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-08",
+          "nav": "1.0021",
+          "acumlt": "1.0021",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-09",
+          "nav": "1.0022",
+          "acumlt": "1.0022",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-10",
+          "nav": "1.0022",
+          "acumlt": "1.0022",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-11",
+          "nav": "1.0022",
+          "acumlt": "1.0022",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-14",
+          "nav": "1.0023",
+          "acumlt": "1.0023",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-15",
+          "nav": "1.0023",
+          "acumlt": "1.0023",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-16",
+          "nav": "1.0028",
+          "acumlt": "1.0028",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-17",
+          "nav": "1.0029",
+          "acumlt": "1.0029",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-18",
+          "nav": "1.0037",
+          "acumlt": "1.0037",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-21",
+          "nav": "1.0038",
+          "acumlt": "1.0038",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-22",
+          "nav": "1.0043",
+          "acumlt": "1.0043",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-23",
+          "nav": "1.0043",
+          "acumlt": "1.0043",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-24",
+          "nav": "1.0043",
+          "acumlt": "1.0043",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-28",
+          "nav": "1.0045",
+          "acumlt": "1.0045",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-29",
+          "nav": "1.0055",
+          "acumlt": "1.0055",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-30",
+          "nav": "1.0055",
+          "acumlt": "1.0055",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-08",
+          "nav": "1.0057",
+          "acumlt": "1.0057",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-09",
+          "nav": "1.0058",
+          "acumlt": "1.0058",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-12",
+          "nav": "1.0071",
+          "acumlt": "1.0071",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-13",
+          "nav": "1.0071",
+          "acumlt": "1.0071",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-14",
+          "nav": "1.0072",
+          "acumlt": "1.0072",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-15",
+          "nav": "1.0072",
+          "acumlt": "1.0072",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-16",
+          "nav": "1.0072",
+          "acumlt": "1.0072",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-19",
+          "nav": "1.0073",
+          "acumlt": "1.0073",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-20",
+          "nav": "1.0073",
+          "acumlt": "1.0073",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-21",
+          "nav": "1.0074",
+          "acumlt": "1.0074",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-22",
+          "nav": "1.0074",
+          "acumlt": "1.0074",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-23",
+          "nav": "1.0074",
+          "acumlt": "1.0074",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-26",
+          "nav": "1.0075",
+          "acumlt": "1.0075",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-27",
+          "nav": "1.0085",
+          "acumlt": "1.0085",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-28",
+          "nav": "1.0086",
+          "acumlt": "1.0086",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-29",
+          "nav": "1.0086",
+          "acumlt": "1.0086",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-30",
+          "nav": "1.0086",
+          "acumlt": "1.0086",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-02",
+          "nav": "1.0091",
+          "acumlt": "1.0091",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-03",
+          "nav": "1.0091",
+          "acumlt": "1.0091",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-04",
+          "nav": "1.0092",
+          "acumlt": "1.0092",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-05",
+          "nav": "1.0094",
+          "acumlt": "1.0094",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        }
+      ]
+    }
+  }
+}

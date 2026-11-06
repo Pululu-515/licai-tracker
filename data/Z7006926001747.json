@@ -1,0 +1,127 @@
+{
+  "prodRegCode": "Z7006926001747",
+  "prodName": "浦银理财益恒利周周定开1号",
+  "orgName": "浦银理财有限责任公司",
+  "source": "chinawealth.com.cn（中国理财网）",
+  "lastUpdated": "2026/11/6 16:01:37",
+  "lastChangeAt": "2026/11/5 16:30:58",
+  "valuesSig": "b177572432d6f0d9",
+  "shares": {
+    "2501260791": {
+      "rows": [
+        {
+          "date": "2026-08-04",
+          "nav": "1.0001",
+          "acumlt": "1.0001",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-10",
+          "nav": "1.0002",
+          "acumlt": "1.0002",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-11",
+          "nav": "1.0002",
+          "acumlt": "1.0002",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-17",
+          "nav": "1.0004",
+          "acumlt": "1.0004",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-18",
+          "nav": "1.0004",
+          "acumlt": "1.0004",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-24",
+          "nav": "1.0005",
+          "acumlt": "1.0005",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-08-31",
+          "nav": "1.0036",
+          "acumlt": "1.0036",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-07",
+          "nav": "1.0038",
+          "acumlt": "1.0038",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-14",
+          "nav": "1.0039",
+          "acumlt": "1.0039",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-21",
+          "nav": "1.0046",
+          "acumlt": "1.0046",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-09-28",
+          "nav": "1.0052",
+          "acumlt": "1.0052",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-08",
+          "nav": "1.006",
+          "acumlt": "1.006",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-12",
+          "nav": "1.0061",
+          "acumlt": "1.0061",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-19",
+          "nav": "1.0066",
+          "acumlt": "1.0066",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-10-26",
+          "nav": "1.0071",
+          "acumlt": "1.0071",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-02",
+          "nav": "1.0073",
+          "acumlt": "1.0073",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        }
+      ]
+    }
+  }
+}

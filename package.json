@@ -1,0 +1,10 @@
+{
+  "name": "licai-tracker",
+  "private": false,
+  "description": "理财净值每日自动抓取 + 静态看板（GitHub Actions + Pages）",
+  "scripts": {
+    "update": "node scripts/update_daily.mjs",
+    "site": "node scripts/export_site.mjs",
+    "build": "node scripts/update_daily.mjs --build-only && node scripts/export_site.mjs"
+  }
+}

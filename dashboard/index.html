@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理财净值看板</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --border: #e5e7eb;
+    --text: #1f2329; --text2: #646a73; --text3: #8f959e;
+    --up: #d93026; --down: #0e9b57; --flat: #646a73;
+    --chip-bg: #f2f4f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; padding: 24px 20px 48px; }
+  .container { max-width: 1280px; margin: 0 auto; }
+  header { margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 600; }
+  .meta { margin-top: 6px; font-size: 12px; color: var(--text3); }
+  .summary { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat-card { flex: 1; min-width: 150px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stat-card .label { font-size: 12px; color: var(--text2); }
+  .stat-card .value { margin-top: 6px; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat-card .sub { margin-top: 2px; font-size: 11px; color: var(--text3); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+  table { width: 100%; min-width: 1080px; border-collapse: collapse; font-size: 13px; }
+  th { background: #fafbfc; color: var(--text2); font-weight: 500; text-align: right; padding: 10px 12px; white-space: nowrap; border-bottom: 1px solid var(--border); }
+  th.left, td.left { text-align: left; }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--text); background: #f3f5f8; }
+  th.sortable .sort-ind { display: inline-block; min-width: 11px; font-size: 10px; color: #c2c6cd; margin-left: 3px; }
+  th.sortable.active { color: #1f2329; }
+  th.sortable.active .sort-ind { color: #2563eb; }
+  td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f8f9fb; }
+  .prod-name { font-weight: 500; font-size: 13px; max-width: 260px; }
+  .prod-org { display: block; font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .share-chip { display: inline-block; background: var(--chip-bg); border-radius: 5px; padding: 2px 8px; font-size: 12px; font-weight: 500; }
+  .num-up { color: var(--up); } .num-down { color: var(--down); } .num-flat { color: var(--flat); }
+  .null-val { color: var(--text3); }
+  .spark { display: inline-block; vertical-align: middle; }
+  .update-time { color: var(--text2); font-size: 12px; }
+  .footnote { margin-top: 8px; padding: 12px 18px; background: #fafbfc; border: 1px solid var(--border); border-radius: 12px; font-size: 11px; color: var(--text3); line-height: 1.8; }
+  .empty-tip { padding: 40px; text-align: center; color: var(--text3); font-size: 14px; }
+
+  /* 页签 */
+  .tabs { display: flex; gap: 2px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .tab { padding: 9px 16px; font-size: 13px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; user-select: none; margin-bottom: -1px; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: #1f2329; border-bottom-color: #2563eb; font-weight: 500; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* 按钮 / 工具条 */
+  .btn { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 14px; font-size: 13px; font-family: inherit; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--text); cursor: pointer; white-space: nowrap; }
+  .btn:hover { background: #f7f8fa; }
+  .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-sm { height: 26px; padding: 0 10px; font-size: 12px; }
+  .btn-link { border: none; background: none; color: #2563eb; cursor: pointer; font-size: 12px; padding: 0; }
+  .btn-link.danger { color: #b42318; }
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .toolbar .grow { flex: 1; }
+  .hint { font-size: 12px; color: var(--text3); }
+  .banner { margin-bottom: 14px; padding: 11px 14px; border-radius: 10px; background: #fff8e6; border: 1px solid #f0d9a8; color: #7a5300; font-size: 12px; line-height: 1.75; }
+  .banner code { background: #fff; border: 1px solid #f0d9a8; border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+
+  /* 弹窗 */
+  .modal-mask { position: fixed; inset: 0; background: rgba(20, 22, 26, 0.4); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50; }
+  .modal-mask.show { display: flex; }
+  .modal { width: 440px; max-height: 88vh; overflow: auto; background: #fff; border-radius: 14px; border: 1px solid var(--border); }
+  .modal h3 { font-size: 15px; font-weight: 500; padding: 15px 20px; border-bottom: 1px solid var(--border); }
+  .modal .body { padding: 16px 20px; display: grid; gap: 12px; }
+  .field { display: grid; gap: 5px; }
+  .field > label { font-size: 12px; color: var(--text2); }
+  .field input, .field select { height: 34px; padding: 0 10px; font-size: 13px; font-family: inherit; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text); }
+  .field input:focus, .field select:focus { outline: none; border-color: #2563eb; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-tip { font-size: 11px; color: var(--text3); }
+  .modal .foot { padding: 13px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+  .err { color: #b42318; font-size: 12px; min-height: 15px; }
+  .badge { display: inline-block; border-radius: 5px; padding: 1px 7px; font-size: 11px; }
+  .badge-buy { background: #fdecea; color: #b42318; }
+  .badge-sell { background: #e8f6ee; color: #0b7a44; }
+  .empty-row td { text-align: center; color: var(--text3); padding: 30px 0; }
+  .note-cell { color: var(--text3); font-size: 12px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>理财净值看板</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <nav class="tabs">
+    <div class="tab active" data-tab="market">净值看板</div>
+    <div class="tab" data-tab="holdings">我的持仓</div>
+    <div class="tab" data-tab="txns">交易记录</div>
+  </nav>
+
+  <section class="tab-panel active" id="panel-market">
+  <div class="summary" id="summary"></div>
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th class="left sortable" data-key="product" title="点击排序">产品<span class="sort-ind"></span></th>
+        <th class="left sortable" data-key="share" title="点击排序">份额<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="nav" title="点击排序">最新净值<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="trend" title="按近30日涨跌幅排序">近30日走势<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="wanToday" title="点击排序">当日万收<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="wan7" title="点击排序">7日日均万收<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="annual7" title="点击排序">7日年化<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="annual14" title="点击排序">14日年化<span class="sort-ind"></span></th>
+        <th class="sortable" data-key="date" title="点击排序">净值日期<span class="sort-ind"></span></th>
+        <th class="left sortable" data-key="updated" title="点击排序">净值更新时间<span class="sort-ind"></span></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty-tip" style="display:none">暂无数据，请先运行更新脚本。</div>
+  </div>
+  <div class="footnote">
+    指标口径：当日万收 = (当日净值 − 前日净值) / 前日净值 × 10000（平台披露万份收益时优先采用）；
+    7日日均万收 = 近 7 个自然日万收加总 / 7；
+    7日年化 = [(当日净值 ÷ 7 个自然日前净值) − 1] ÷ 实际天数 × 365（平台披露 7 日年化时优先采用）；
+    14日年化 = [(当日净值 ÷ 14 个自然日前净值) − 1] ÷ 实际天数 × 365。
+    年化均为单利口径，基数 365 天；"7日前/14日前" 取当日或之前最近一个披露日，净值优先用累计净值（含分红影响）。
+    红 = 上涨，绿 = 下跌；"净值更新时间" 为该产品当前这批净值被获取到的时间，只有净值发生变化（新增净值日或净值被修正）时才会更新，净值不变则时间不变（每日空跑不会改动它）。
+    点击任意表头可排序（再点一次切换升降序）；"近30日走势" 列按近 30 日涨跌幅排序；无数据的行始终排在最后。
+  </div>
+  </section>
+
+  <section class="tab-panel" id="panel-holdings">
+    <div class="banner" id="offline-banner" style="display:none">
+      当前是直接打开本地文件（file://），浏览器无法写入持仓数据。请改用本地服务打开：
+      <code>cd 理财记录工具 && npm run dash</code>，然后访问 <code id="offline-url">http://127.0.0.1:7788</code>。
+    </div>
+    <div class="summary" id="hold-summary"></div>
+    <div class="toolbar">
+      <button class="btn btn-primary" data-act="buy">+ 买入</button>
+      <button class="btn" data-act="sell">− 赎回</button>
+      <span class="grow"></span>
+      <span class="hint" id="hold-hint"></span>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr>
+          <th class="left">产品</th>
+          <th class="left">份额</th>
+          <th>持有份额</th>
+          <th>持仓成本</th>
+          <th>平均成本(元/份)</th>
+          <th>最新净值</th>
+          <th>持仓市值</th>
+          <th>浮动盈亏</th>
+          <th>浮动收益率</th>
+          <th>已实现盈亏</th>
+          <th>累计收益</th>
+          <th>净值日期</th>
+        </tr></thead>
+        <tbody id="hold-rows"></tbody>
+      </table>
+      <div id="hold-empty" class="empty-tip" style="display:none">还没有持仓记录，点击「+ 买入」录入第一笔。</div>
+    </div>
+  </section>
+
+  <section class="tab-panel" id="panel-txns">
+    <div class="toolbar">
+      <button class="btn btn-primary" data-act="buy">+ 买入</button>
+      <button class="btn" data-act="sell">− 赎回</button>
+      <span class="grow"></span>
+      <span class="hint">数据保存在 data/transactions.json，可自行备份</span>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr>
+          <th class="left">类型</th>
+          <th class="left">产品</th>
+          <th class="left">份额</th>
+          <th>申请日期</th>
+          <th>确认日期</th>
+          <th>确认净值</th>
+          <th>金额</th>
+          <th>份额变动</th>
+          <th>手续费</th>
+          <th class="left">备注</th>
+          <th class="left">操作</th>
+        </tr></thead>
+        <tbody id="txn-rows"></tbody>
+      </table>
+      <div id="txn-empty" class="empty-tip" style="display:none">暂无交易记录，点击「+ 买入」开始记录。</div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-mask" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">买入</h3>
+    <div class="body">
+      <div class="field">
+        <label>产品</label>
+        <select id="f-prod"></select>
+      </div>
+      <div class="field">
+        <label>份额</label>
+        <select id="f-share"></select>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label id="f-apply-label">买入日期</label>
+          <input type="date" id="f-apply">
+        </div>
+        <div class="field">
+          <label>净值确认日期</label>
+          <input type="date" id="f-confirm">
+        </div>
+      </div>
+      <div class="field">
+        <label>确认净值（元/份）</label>
+        <input type="number" step="0.000001" min="0" id="f-nav" placeholder="选择确认日期后自动带出，可手动改">
+        <div class="form-tip" id="nav-tip"></div>
+      </div>
+      <div class="field" id="f-amount-wrap">
+        <label>买入金额（元）</label>
+        <input type="number" step="0.01" min="0" id="f-amount" placeholder="如 10000">
+      </div>
+      <div class="field" id="f-shares-wrap" style="display:none">
+        <label>赎回份额（份）</label>
+        <input type="number" step="0.01" min="0" id="f-shares" placeholder="如 5000.00">
+        <div class="form-tip" id="share-tip"></div>
+      </div>
+      <div class="field">
+        <label>手续费（元，可留空）</label>
+        <input type="number" step="0.01" min="0" id="f-fee" placeholder="0">
+      </div>
+      <div class="field">
+        <label>备注（可选）</label>
+        <input type="text" id="f-note" placeholder="如：手机银行买入">
+      </div>
+      <div class="err" id="f-err"></div>
+    </div>
+    <div class="foot">
+      <button class="btn" id="m-cancel">取消</button>
+      <button class="btn btn-primary" id="m-ok">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {"generatedAt":"2026/11/6 21:01:05","products":[{"code":"Z7003126000267","name":"苏银理财恒源鑫泰量化日开1号","orgName":"苏银理财有限责任公司","updatedAt":"2026/11/6 14:05:05","shares":[{"code":"J23852","indicators":{"date":"2026-11-05","nav":1.010545,"acumlt":1.010545,"wanShouToday":1.3163,"wanShou7Avg":-0.6457,"annual7":-2.357,"annual14":-0.2348,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-17","nav":1.007866},{"date":"2026-09-18","nav":1.007922},{"date":"2026-09-21","nav":1.008035},{"date":"2026-09-22","nav":1.008217},{"date":"2026-09-23","nav":1.008615},{"date":"2026-09-24","nav":1.008732},{"date":"2026-09-28","nav":1.008927},{"date":"2026-09-29","nav":1.009086},{"date":"2026-09-30","nav":1.009096},{"date":"2026-10-08","nav":1.009329},{"date":"2026-10-09","nav":1.009545},{"date":"2026-10-12","nav":1.009732},{"date":"2026-10-13","nav":1.009796},{"date":"2026-10-14","nav":1.009868},{"date":"2026-10-15","nav":1.009998},{"date":"2026-10-16","nav":1.010185},{"date":"2026-10-19","nav":1.010275},{"date":"2026-10-20","nav":1.010378},{"date":"2026-10-21","nav":1.010587},{"date":"2026-10-22","nav":1.010636},{"date":"2026-10-23","nav":1.010753},{"date":"2026-10-26","nav":1.010855},{"date":"2026-10-27","nav":1.010916},{"date":"2026-10-28","nav":1.010942},{"date":"2026-10-29","nav":1.011002},{"date":"2026-10-30","nav":1.010651},{"date":"2026-11-02","nav":1.010309},{"date":"2026-11-03","nav":1.010227},{"date":"2026-11-04","nav":1.010412},{"date":"2026-11-05","nav":1.010545}]}]},{"code":"Z7007126000099","name":"上银理财“领航精选”系列开放式理财产品WPLK26D0101期","orgName":"上银理财有限责任公司","updatedAt":"2026/11/6 15:54:10","shares":[{"code":"WPLK26D0101A","indicators":{"date":"2026-11-05","nav":1.026,"acumlt":1.026,"wanShouToday":0,"wanShou7Avg":-0.5562,"annual7":-2.0321,"annual14":0.6608,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-17","nav":1.02223},{"date":"2026-09-18","nav":1.02262},{"date":"2026-09-21","nav":1.02276},{"date":"2026-09-22","nav":1.02332},{"date":"2026-09-23","nav":1.02379},{"date":"2026-09-24","nav":1.02364},{"date":"2026-09-28","nav":1.02319},{"date":"2026-09-29","nav":1.02347},{"date":"2026-09-30","nav":1.02399},{"date":"2026-10-08","nav":1.02413},{"date":"2026-10-09","nav":1.02466},{"date":"2026-10-12","nav":1.02518},{"date":"2026-10-13","nav":1.02512},{"date":"2026-10-14","nav":1.02527},{"date":"2026-10-15","nav":1.02521},{"date":"2026-10-16","nav":1.02553},{"date":"2026-10-19","nav":1.02576},{"date":"2026-10-20","nav":1.02573},{"date":"2026-10-21","nav":1.02583},{"date":"2026-10-22","nav":1.02574},{"date":"2026-10-23","nav":1.02565},{"date":"2026-10-26","nav":1.02593},{"date":"2026-10-27","nav":1.02614},{"date":"2026-10-28","nav":1.02617},{"date":"2026-10-29","nav":1.0264},{"date":"2026-10-30","nav":1.0255},{"date":"2026-11-02","nav":1.0257},{"date":"2026-11-03","nav":1.0259},{"date":"2026-11-04","nav":1.026},{"date":"2026-11-05","nav":1.026}]}]},{"code":"Z7001126000218","name":"农银理财农银匠心·灵动14天理财产品第9期","orgName":"农银理财有限责任公司","updatedAt":"2026/11/6 08:17:12","shares":[{"code":"NYJXLD1409G","indicators":{"date":"2026-11-05","nav":1.018523,"acumlt":1.018523,"wanShouToday":8.7655,"wanShou7Avg":-0.0904,"annual7":-0.0034,"annual14":1.2856,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-20","nav":1.015094},{"date":"2026-09-21","nav":1.015285},{"date":"2026-09-22","nav":1.015454},{"date":"2026-09-23","nav":1.015517},{"date":"2026-09-24","nav":1.015752},{"date":"2026-09-28","nav":1.015804},{"date":"2026-09-29","nav":1.016153},{"date":"2026-09-30","nav":1.01594},{"date":"2026-10-08","nav":1.016039},{"date":"2026-10-09","nav":1.016212},{"date":"2026-10-10","nav":1.016261},{"date":"2026-10-12","nav":1.016609},{"date":"2026-10-13","nav":1.016724},{"date":"2026-10-14","nav":1.017011},{"date":"2026-10-15","nav":1.017064},{"date":"2026-10-16","nav":1.017335},{"date":"2026-10-19","nav":1.017504},{"date":"2026-10-20","nav":1.0179},{"date":"2026-10-21","nav":1.018004},{"date":"2026-10-22","nav":1.018021},{"date":"2026-10-23","nav":1.018096},{"date":"2026-10-26","nav":1.018279},{"date":"2026-10-27","nav":1.018501},{"date":"2026-10-28","nav":1.018546},{"date":"2026-10-29","nav":1.01859},{"date":"2026-10-30","nav":1.016626},{"date":"2026-11-02","nav":1.016751},{"date":"2026-11-03","nav":1.017442},{"date":"2026-11-04","nav":1.017631},{"date":"2026-11-05","nav":1.018523}]}]},{"code":"Z7006926001306","name":"浦银理财双周鑫最短持有期116号理财产品","orgName":"浦银理财有限责任公司","updatedAt":"2026/11/6 16:01:23","shares":[{"code":"2501260175","indicators":{"date":"2026-11-05","nav":1.00494,"acumlt":1.00494,"wanShouToday":2.787,"wanShou7Avg":0.2418,"annual7":0.8822,"annual14":1.6095,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-20","nav":1.0009},{"date":"2026-09-21","nav":1.0009},{"date":"2026-09-22","nav":1.0009},{"date":"2026-09-23","nav":1.00095},{"date":"2026-09-24","nav":1.00098},{"date":"2026-09-28","nav":1.00107},{"date":"2026-09-29","nav":1.0011},{"date":"2026-09-30","nav":1.00157},{"date":"2026-10-08","nav":1.00163},{"date":"2026-10-09","nav":1.00224},{"date":"2026-10-10","nav":1.00245},{"date":"2026-10-12","nav":1.00346},{"date":"2026-10-13","nav":1.00349},{"date":"2026-10-14","nav":1.00384},{"date":"2026-10-15","nav":1.00387},{"date":"2026-10-16","nav":1.00389},{"date":"2026-10-19","nav":1.00412},{"date":"2026-10-20","nav":1.00416},{"date":"2026-10-21","nav":1.00429},{"date":"2026-10-22","nav":1.00432},{"date":"2026-10-23","nav":1.00438},{"date":"2026-10-26","nav":1.00457},{"date":"2026-10-27","nav":1.00462},{"date":"2026-10-28","nav":1.00467},{"date":"2026-10-29","nav":1.00477},{"date":"2026-10-30","nav":1.00461},{"date":"2026-11-02","nav":1.00446},{"date":"2026-11-03","nav":1.00453},{"date":"2026-11-04","nav":1.00466},{"date":"2026-11-05","nav":1.00494}]}]},{"code":"Z7002426000328","name":"徽银理财安盈稳健日开7号理财产品260395","orgName":"徽银理财有限责任公司","updatedAt":"2026/11/6 08:17:29","shares":[{"code":"PNHY260395A","indicators":{"date":"2026-11-05","nav":1.004323,"acumlt":1.004323,"wanShouToday":2.8684,"wanShou7Avg":0.9136,"annual7":3.3353,"annual14":3.5925,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-23","nav":1.00003},{"date":"2026-09-24","nav":1.00006},{"date":"2026-09-28","nav":1.000291},{"date":"2026-09-29","nav":1.000339},{"date":"2026-09-30","nav":1.000371},{"date":"2026-10-08","nav":1.00063},{"date":"2026-10-09","nav":1.000772},{"date":"2026-10-12","nav":1.001129},{"date":"2026-10-13","nav":1.001558},{"date":"2026-10-14","nav":1.001711},{"date":"2026-10-15","nav":1.002033},{"date":"2026-10-16","nav":1.002096},{"date":"2026-10-19","nav":1.002582},{"date":"2026-10-20","nav":1.00263},{"date":"2026-10-21","nav":1.002911},{"date":"2026-10-22","nav":1.002941},{"date":"2026-10-23","nav":1.002972},{"date":"2026-10-26","nav":1.00358},{"date":"2026-10-27","nav":1.003616},{"date":"2026-10-28","nav":1.00366},{"date":"2026-10-29","nav":1.003681},{"date":"2026-10-30","nav":1.003634},{"date":"2026-11-02","nav":1.003719},{"date":"2026-11-03","nav":1.003753},{"date":"2026-11-04","nav":1.004035},{"date":"2026-11-05","nav":1.004323}]}]},{"code":"Z7008926000543","name":"北银理财京华远见春系列诚享7天持有期33号理财产品","orgName":"北银理财有限责任公司","updatedAt":"2026/11/6 15:47:53","shares":[{"code":"YJ01260819A","indicators":{"date":"2026-11-05","nav":1.005951,"acumlt":1.005951,"wanShouToday":3.2119,"wanShou7Avg":0.9277,"annual7":3.387,"annual14":3.9766,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-17","nav":1.000868},{"date":"2026-09-18","nav":1.000979},{"date":"2026-09-21","nav":1.001318},{"date":"2026-09-22","nav":1.001436},{"date":"2026-09-23","nav":1.001535},{"date":"2026-09-24","nav":1.001628},{"date":"2026-09-28","nav":1.002002},{"date":"2026-09-29","nav":1.002096},{"date":"2026-09-30","nav":1.002196},{"date":"2026-10-08","nav":1.002944},{"date":"2026-10-09","nav":1.003042},{"date":"2026-10-12","nav":1.003338},{"date":"2026-10-13","nav":1.003437},{"date":"2026-10-14","nav":1.003543},{"date":"2026-10-15","nav":1.003664},{"date":"2026-10-16","nav":1.003762},{"date":"2026-10-19","nav":1.004056},{"date":"2026-10-20","nav":1.004205},{"date":"2026-10-21","nav":1.004315},{"date":"2026-10-22","nav":1.004419},{"date":"2026-10-23","nav":1.004513},{"date":"2026-10-26","nav":1.00481},{"date":"2026-10-27","nav":1.00494},{"date":"2026-10-28","nav":1.00514},{"date":"2026-10-29","nav":1.005298},{"date":"2026-10-30","nav":1.005334},{"date":"2026-11-02","nav":1.005407},{"date":"2026-11-03","nav":1.005509},{"date":"2026-11-04","nav":1.005628},{"date":"2026-11-05","nav":1.005951}]}]},{"code":"Z7006926001747","name":"浦银理财益恒利周周定开1号","orgName":"浦银理财有限责任公司","updatedAt":"2026/11/5 16:30:58","shares":[{"code":"2501260791","indicators":{"date":"2026-11-02","nav":1.0073,"acumlt":1.0073,"wanShouToday":1.9859,"wanShou7Avg":0.2837,"annual7":1.0355,"annual14":1.813,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-08-04","nav":1.0001},{"date":"2026-08-10","nav":1.0002},{"date":"2026-08-11","nav":1.0002},{"date":"2026-08-17","nav":1.0004},{"date":"2026-08-18","nav":1.0004},{"date":"2026-08-24","nav":1.0005},{"date":"2026-08-31","nav":1.0036},{"date":"2026-09-07","nav":1.0038},{"date":"2026-09-14","nav":1.0039},{"date":"2026-09-21","nav":1.0046},{"date":"2026-09-28","nav":1.0052},{"date":"2026-10-08","nav":1.006},{"date":"2026-10-12","nav":1.0061},{"date":"2026-10-19","nav":1.0066},{"date":"2026-10-26","nav":1.0071},{"date":"2026-11-02","nav":1.0073}]}]},{"code":"Z7008926000548","name":"北银理财京华远见春系列诚享7天持有期34号理财产品","orgName":"北银理财有限责任公司","updatedAt":"2026/11/6 15:47:58","shares":[{"code":"YJ01260820A","indicators":{"date":"2026-11-05","nav":1.005937,"acumlt":1.005937,"wanShouToday":1.4317,"wanShou7Avg":0.5909,"annual7":2.1572,"annual14":2.8203,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-17","nav":1.001366},{"date":"2026-09-18","nav":1.001473},{"date":"2026-09-21","nav":1.001799},{"date":"2026-09-22","nav":1.001914},{"date":"2026-09-23","nav":1.002009},{"date":"2026-09-24","nav":1.002102},{"date":"2026-09-28","nav":1.002475},{"date":"2026-09-29","nav":1.002568},{"date":"2026-09-30","nav":1.002668},{"date":"2026-10-08","nav":1.003413},{"date":"2026-10-09","nav":1.003506},{"date":"2026-10-12","nav":1.003805},{"date":"2026-10-13","nav":1.003899},{"date":"2026-10-14","nav":1.004001},{"date":"2026-10-15","nav":1.004118},{"date":"2026-10-16","nav":1.004211},{"date":"2026-10-19","nav":1.004492},{"date":"2026-10-20","nav":1.004636},{"date":"2026-10-21","nav":1.004746},{"date":"2026-10-22","nav":1.00485},{"date":"2026-10-23","nav":1.004943},{"date":"2026-10-26","nav":1.005239},{"date":"2026-10-27","nav":1.005332},{"date":"2026-10-28","nav":1.005427},{"date":"2026-10-29","nav":1.005521},{"date":"2026-10-30","nav":1.005552},{"date":"2026-11-02","nav":1.005647},{"date":"2026-11-03","nav":1.005721},{"date":"2026-11-04","nav":1.005793},{"date":"2026-11-05","nav":1.005937}]}]},{"code":"Z7001626000675","name":"招银理财招睿添利日开25号固定收益类理财计划","orgName":"招银理财有限责任公司","updatedAt":"2026/11/6 08:18:05","shares":[{"code":"132152A","indicators":{"date":"2026-11-05","nav":1.0094,"acumlt":1.0094,"wanShouToday":1.9818,"wanShou7Avg":1.1329,"annual7":4.1359,"annual14":5.176,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-17","nav":1.0029},{"date":"2026-09-18","nav":1.0037},{"date":"2026-09-21","nav":1.0038},{"date":"2026-09-22","nav":1.0043},{"date":"2026-09-23","nav":1.0043},{"date":"2026-09-24","nav":1.0043},{"date":"2026-09-28","nav":1.0045},{"date":"2026-09-29","nav":1.0055},{"date":"2026-09-30","nav":1.0055},{"date":"2026-10-08","nav":1.0057},{"date":"2026-10-09","nav":1.0058},{"date":"2026-10-12","nav":1.0071},{"date":"2026-10-13","nav":1.0071},{"date":"2026-10-14","nav":1.0072},{"date":"2026-10-15","nav":1.0072},{"date":"2026-10-16","nav":1.0072},{"date":"2026-10-19","nav":1.0073},{"date":"2026-10-20","nav":1.0073},{"date":"2026-10-21","nav":1.0074},{"date":"2026-10-22","nav":1.0074},{"date":"2026-10-23","nav":1.0074},{"date":"2026-10-26","nav":1.0075},{"date":"2026-10-27","nav":1.0085},{"date":"2026-10-28","nav":1.0086},{"date":"2026-10-29","nav":1.0086},{"date":"2026-10-30","nav":1.0086},{"date":"2026-11-02","nav":1.0091},{"date":"2026-11-03","nav":1.0091},{"date":"2026-11-04","nav":1.0092},{"date":"2026-11-05","nav":1.0094}]}]},{"code":"Z7001026000481","name":"中银理财-稳富纯债14天持有期4号","orgName":"中银理财有限责任公司","updatedAt":"2026/11/6 16:20:24","shares":[{"code":"CYQWFCZ14D4A","indicators":{"date":"2026-11-04","nav":1.007239,"acumlt":1.007239,"wanShouToday":1.1121,"wanShou7Avg":2.2945,"annual7":8.3792,"annual14":8.252,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-16","nav":1.001406},{"date":"2026-09-17","nav":1.001483},{"date":"2026-09-18","nav":1.001569},{"date":"2026-09-21","nav":1.001802},{"date":"2026-09-22","nav":1.001889},{"date":"2026-09-23","nav":1.001896},{"date":"2026-09-24","nav":1.002068},{"date":"2026-09-28","nav":1.002134},{"date":"2026-09-29","nav":1.002316},{"date":"2026-09-30","nav":1.002317},{"date":"2026-10-08","nav":1.002648},{"date":"2026-10-09","nav":1.002821},{"date":"2026-10-12","nav":1.00308},{"date":"2026-10-13","nav":1.003224},{"date":"2026-10-14","nav":1.003337},{"date":"2026-10-15","nav":1.003493},{"date":"2026-10-16","nav":1.003535},{"date":"2026-10-19","nav":1.00367},{"date":"2026-10-20","nav":1.003972},{"date":"2026-10-21","nav":1.004061},{"date":"2026-10-22","nav":1.004144},{"date":"2026-10-23","nav":1.004236},{"date":"2026-10-26","nav":1.00546},{"date":"2026-10-27","nav":1.005561},{"date":"2026-10-28","nav":1.005623},{"date":"2026-10-29","nav":1.006322},{"date":"2026-10-30","nav":1.006312},{"date":"2026-11-02","nav":1.006529},{"date":"2026-11-03","nav":1.007127},{"date":"2026-11-04","nav":1.007239}]}]},{"code":"Z7001026000529","name":"中银理财-稳富全球配置日开","orgName":"中银理财有限责任公司","updatedAt":"2026/11/6 16:20:39","shares":[{"code":"WFQQPZRKA","indicators":{"date":"2026-11-04","nav":1.012835,"acumlt":1.012835,"wanShouToday":5.5123,"wanShou7Avg":1.3719,"annual7":5.0089,"annual14":15.3153,"annualBasis":"365日","annualWindow":"日历日"},"trend":[{"date":"2026-09-16","nav":1.003487},{"date":"2026-09-17","nav":1.00356},{"date":"2026-09-18","nav":1.003701},{"date":"2026-09-21","nav":1.00385},{"date":"2026-09-22","nav":1.003992},{"date":"2026-09-23","nav":1.003995},{"date":"2026-09-24","nav":1.004067},{"date":"2026-09-28","nav":1.004149},{"date":"2026-09-29","nav":1.004361},{"date":"2026-09-30","nav":1.004292},{"date":"2026-10-08","nav":1.004589},{"date":"2026-10-09","nav":1.004731},{"date":"2026-10-12","nav":1.005006},{"date":"2026-10-13","nav":1.005144},{"date":"2026-10-14","nav":1.005282},{"date":"2026-10-15","nav":1.00535},{"date":"2026-10-16","nav":1.005806},{"date":"2026-10-19","nav":1.005934},{"date":"2026-10-20","nav":1.006851},{"date":"2026-10-21","nav":1.00692},{"date":"2026-10-22","nav":1.007063},{"date":"2026-10-23","nav":1.007153},{"date":"2026-10-26","nav":1.010796},{"date":"2026-10-27","nav":1.011857},{"date":"2026-10-28","nav":1.011863},{"date":"2026-10-29","nav":1.011946},{"date":"2026-10-30","nav":1.011968},{"date":"2026-11-02","nav":1.012045},{"date":"2026-11-03","nav":1.012277},{"date":"2026-11-04","nav":1.012835}]}]}]};
+
+if (!DATA || !DATA.products.length) {
+  document.getElementById("empty").style.display = "block";
+} else {
+  const fmt = (v, d = 4) => (v == null || isNaN(v) ? '<span class="null-val">--</span>' : Number(v).toFixed(d));
+  const cls = (v) => (v == null || isNaN(v) ? "num-flat" : v > 0 ? "num-up" : v < 0 ? "num-down" : "num-flat");
+
+  const allShares = DATA.products.flatMap(p => p.shares);
+  const withInd = allShares.filter(s => s.indicators);
+  const latestDate = withInd.length ? withInd[0].indicators.date : "--";
+  const avgWanShou = withInd.length ? withInd.reduce((s, x) => s + (x.indicators.wanShouToday || 0), 0) / withInd.length : null;
+  const avgAnnual7 = withInd.length ? withInd.reduce((s, x) => s + (x.indicators.annual7 || 0), 0) / withInd.length : null;
+  document.getElementById("meta").textContent =
+    `数据更新时间：${DATA.generatedAt} · 数据来源：各产品官网披露 / 中国理财网 · ${DATA.products.length} 个产品 / ${allShares.length} 个份额`;
+  document.getElementById("summary").innerHTML = `
+    <div class="stat-card"><div class="label">监控产品 / 份额</div><div class="value">${DATA.products.length}<span style="font-size:14px;color:var(--text3)"> / ${allShares.length}</span></div><div class="sub">每日 7:00 自动更新</div></div>
+    <div class="stat-card"><div class="label">最新净值日期</div><div class="value" style="font-size:18px">${latestDate}</div><div class="sub">T+1 披露，节假日顺延</div></div>
+    <div class="stat-card"><div class="label">平均当日万收</div><div class="value ${cls(avgWanShou)}">${fmt(avgWanShou)}</div><div class="sub">全部份额简单平均</div></div>
+    <div class="stat-card"><div class="label">平均 7 日年化</div><div class="value ${cls(avgAnnual7)}">${fmt(avgAnnual7, 2)}%</div><div class="sub">全部份额简单平均</div></div>
+  `;
+
+  // ---- 扁平化：一行一个份额，排序后再按「连续同产品」分组渲染 rowspan ----
+  const flat = [];
+  DATA.products.forEach((p, pi) => {
+    p.shares.forEach((s, si) => {
+      flat.push({
+        prodCode: p.code, prodName: p.name || p.code, orgName: p.orgName || "",
+        shareCode: s.code, ind: s.indicators, trend: s.trend || [], updatedAt: p.updatedAt || "",
+        _pi: pi, _si: si,
+      });
+    });
+  });
+
+  const trendChange = (trend) => {
+    if (!trend || trend.length < 2) return null;
+    const a = trend[0].nav, b = trend[trend.length - 1].nav;
+    if (!a || !b) return null;
+    return (b / a - 1) * 100;
+  };
+  const parseUpdated = (s) => {
+    const m = String(s || "").match(/(\d{4})\/(\d{1,2})\/(\d{1,2})[ T](\d{1,2}):(\d{2}):(\d{2})/);
+    return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime() : null;
+  };
+
+  const KEYS = {
+    product: (r) => r.prodName,
+    share: (r) => r.shareCode,
+    nav: (r) => (r.ind ? r.ind.nav : null),
+    trend: (r) => trendChange(r.trend),
+    wanToday: (r) => (r.ind ? r.ind.wanShouToday : null),
+    wan7: (r) => (r.ind ? r.ind.wanShou7Avg : null),
+    annual7: (r) => (r.ind ? r.ind.annual7 : null),
+    annual14: (r) => (r.ind ? r.ind.annual14 : null),
+    date: (r) => (r.ind ? r.ind.date : null),
+    updated: (r) => parseUpdated(r.updatedAt),
+  };
+  const NUMERIC = new Set(["nav", "trend", "wanToday", "wan7", "annual7", "annual14", "updated", "date"]);
+
+  let sortKey = null;
+  let sortDir = "asc";
+
+  const sortRows = (arr) => {
+    if (!sortKey) return arr.slice();
+    const get = KEYS[sortKey];
+    const mul = sortDir === "asc" ? 1 : -1;
+    return arr.slice().sort((a, b) => {
+      const va = get(a), vb = get(b);
+      const ea = va == null || va === "" || (typeof va === "number" && !isFinite(va));
+      const eb = vb == null || vb === "" || (typeof vb === "number" && !isFinite(vb));
+      if (ea && eb) return a._pi - b._pi || a._si - b._si;   // 空值并列时按原顺序
+      if (ea) return 1;                                      // 空值恒排最后
+      if (eb) return -1;
+      let d;
+      if (typeof va === "number" && typeof vb === "number") d = va - vb;
+      else d = String(va).localeCompare(String(vb), "zh-CN");
+      return d === 0 ? a._pi - b._pi || a._si - b._si : d * mul; // 同值保持原顺序
+    });
+  };
+
+  const sparkline = (trend) => {
+    if (!trend || trend.length < 2) return '<span class="null-val">--</span>';
+    const vals = trend.map((t) => t.nav);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const range = max - min || 1;
+    const W = 110, H = 28, step = W / (vals.length - 1);
+    const pts = vals.map((v, i) => `${(i * step).toFixed(1)},${(H - 3 - ((v - min) / range) * (H - 6)).toFixed(1)}`).join(" ");
+    const color = vals[vals.length - 1] >= vals[0] ? "var(--up)" : "var(--down)";
+    return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5"/></svg>`;
+  };
+
+  const render = () => {
+    const rows = sortRows(flat);
+    let html = "";
+    let i = 0;
+    while (i < rows.length) {
+      // 找出连续的同一产品片段，仅首行输出产品单元格（rowspan）
+      let j = i;
+      while (j < rows.length && rows[j].prodCode === rows[i].prodCode) j++;
+      const span = j - i;
+      for (let k = i; k < j; k++) {
+        const r = rows[k], ind = r.ind;
+        const prodCell = k === i
+          ? `<td class="left" rowspan="${span}" style="vertical-align:top"><span class="prod-name">${r.prodName}</span><span class="prod-org">${r.orgName}</span></td>`
+          : "";
+        html += `<tr>${prodCell}
+          <td class="left"><span class="share-chip">${r.shareCode}</span></td>
+          <td>${fmt(ind?.nav, 6)}</td>
+          <td>${sparkline(r.trend)}</td>
+          <td class="${cls(ind?.wanShouToday)}">${fmt(ind?.wanShouToday)}</td>
+          <td class="${cls(ind?.wanShou7Avg)}">${fmt(ind?.wanShou7Avg)}</td>
+          <td class="${cls(ind?.annual7)}">${fmt(ind?.annual7, 2)}%</td>
+          <td class="${cls(ind?.annual14)}">${fmt(ind?.annual14, 2)}%</td>
+          <td style="color:var(--text2)">${ind?.date ?? "--"}</td>
+          <td class="left update-time">${r.updatedAt || '<span class="null-val">--</span>'}</td>
+        </tr>`;
+      }
+      i = j;
+    }
+    document.getElementById("rows").innerHTML = html;
+
+    // 表头排序状态
+    document.querySelectorAll("th.sortable").forEach((th) => {
+      const active = th.dataset.key === sortKey;
+      th.classList.toggle("active", active);
+      const ind = th.querySelector(".sort-ind");
+      if (ind) ind.textContent = active ? (sortDir === "asc" ? "▲" : "▼") : "";
+      th.setAttribute("aria-sort", active ? (sortDir === "asc" ? "ascending" : "descending") : "none");
+    });
+  };
+
+  document.querySelectorAll("th.sortable").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (sortKey === key) {
+        sortDir = sortDir === "asc" ? "desc" : "asc";
+      } else {
+        sortKey = key;
+        // 数值列默认从大到小，文本/日期列默认升序
+        sortDir = NUMERIC.has(key) ? "desc" : "asc";
+      }
+      render();
+    });
+  });
+
+  render();
+}
+</script>
+
+<script>
+/* ==================== 持仓 / 交易 ==================== */
+(function () {
+  const API = "/api/transactions";
+  const money = (v) => (v == null || isNaN(v) ? "--" : Number(v).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+  const qty = (v) => (v == null || isNaN(v) ? "--" : Number(v).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+  const nav6 = (v) => (v == null || isNaN(v) ? "--" : Number(v).toFixed(6));
+  const pct = (v) => (v == null || !isFinite(v) ? "--" : (v > 0 ? "+" : "") + (v * 100).toFixed(2) + "%");
+  const tone = (v) => (v == null || isNaN(v) ? "" : v > 0 ? "num-up" : v < 0 ? "num-down" : "num-flat");
+  const todayStr = () => {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  };
+
+  const root = document.getElementById("panel-holdings");
+  if (!root) return;
+
+  // 产品 → 份额 → {日期: 净值} 索引，用于按确认日期自动带出净值
+  const ALL_PRODUCTS = (typeof DATA !== "undefined" && DATA && DATA.products) ? DATA.products : [];
+  const navIndex = {};
+  const productList = [];
+  ALL_PRODUCTS.forEach((p) => {
+    productList.push({ code: p.code, name: p.name, orgName: p.orgName, shares: p.shares.map((s) => s.code) });
+    p.shares.forEach((s) => {
+      navIndex[p.code + "|" + s.code] = {};
+      (s.trend || []).forEach((r) => { navIndex[p.code + "|" + s.code][r.date] = r.nav; });
+      if (s.indicators) navIndex[p.code + "|" + s.code][s.indicators.date] = s.indicators.nav;
+    });
+  });
+  const latestNav = (code, share) => {
+    for (const p of ALL_PRODUCTS) {
+      if (p.code !== code) continue;
+      const s = p.shares.find((x) => x.code === share);
+      if (s && s.indicators) return { nav: s.indicators.nav, date: s.indicators.date };
+    }
+    return { nav: null, date: null };
+  };
+
+  let txns = [];
+  let offline = false;
+  let mode = "buy";
+
+  const api = async (url, opts) => {
+    const res = await fetch(url, Object.assign({ headers: { "Content-Type": "application/json" } }, opts));
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok || j.ok === false) throw new Error(j.error || `请求失败（HTTP ${res.status}）`);
+    return j;
+  };
+
+  /* ---------- 持仓计算：移动加权平均成本 ---------- */
+  const buildPositions = () => {
+    const pos = new Map();
+    const sorted = txns.slice().sort((a, b) =>
+      a.confirmDate === b.confirmDate ? String(a.createdAt).localeCompare(String(b.createdAt)) : a.confirmDate.localeCompare(b.confirmDate)
+    );
+    for (const t of sorted) {
+      const key = t.code + "|" + t.share;
+      if (!pos.has(key)) pos.set(key, { code: t.code, share: t.share, productName: t.productName, shares: 0, cost: 0, realized: 0, firstDate: t.confirmDate, lastDate: t.confirmDate });
+      const p = pos.get(key);
+      p.lastDate = t.confirmDate;
+      if (t.type === "buy") {
+        p.shares += t.shares;
+        p.cost += t.amount;              // 含手续费的实付金额
+      } else {
+        const avg = p.shares > 0 ? p.cost / p.shares : 0;
+        const sold = Math.min(t.shares, p.shares);
+        p.realized += t.amount - avg * sold; // 赎回净额 - 卖出部分成本
+        p.cost -= avg * sold;
+        p.shares -= sold;
+      }
+      if (Math.abs(p.shares) < 1e-6) { p.shares = 0; p.cost = 0; }
+    }
+    const rows = [];
+    for (const p of pos.values()) {
+      if (p.shares <= 0 && Math.abs(p.realized) < 1e-9) continue; // 已清仓且无盈亏，不展示
+      const cur = latestNav(p.code, p.share);
+      const price = cur.nav;
+      const market = price != null ? p.shares * price : null;
+      const unreal = market != null ? market - p.cost : null;
+      const rate = p.cost > 0 && unreal != null ? unreal / p.cost : null;
+      rows.push({ ...p, nav: price, navDate: cur.date, market, unreal, rate, total: unreal != null ? unreal + p.realized : null, productName: p.productName || (productList.find((x) => x.code === p.code) || {}).name || p.code });
+    }
+    return rows.sort((a, b) => (b.market ?? 0) - (a.market ?? 0));
+  };
+
+  const renderHoldings = () => {
+    const rows = buildPositions();
+    const sum = rows.reduce((acc, r) => {
+      acc.market += r.market ?? 0;
+      acc.cost += r.cost;
+      acc.unreal += r.unreal ?? 0;
+      acc.realized += r.realized;
+      return acc;
+    }, { market: 0, cost: 0, unreal: 0, realized: 0 });
+    const totalRate = sum.cost > 0 ? sum.unreal / sum.cost : null;
+
+    document.getElementById("hold-summary").innerHTML = `
+      <div class="stat-card"><div class="label">持仓市值</div><div class="value">${money(sum.market)}</div><div class="sub">按最新净值估算</div></div>
+      <div class="stat-card"><div class="label">持仓成本</div><div class="value">${money(sum.cost)}</div><div class="sub">含买入手续费</div></div>
+      <div class="stat-card"><div class="label">浮动盈亏</div><div class="value ${tone(sum.unreal)}">${sum.unreal >= 0 ? "+" : ""}${money(sum.unreal)}</div><div class="sub">浮动收益率 ${pct(totalRate)}</div></div>
+      <div class="stat-card"><div class="label">已实现盈亏</div><div class="value ${tone(sum.realized)}">${sum.realized >= 0 ? "+" : ""}${money(sum.realized)}</div><div class="sub">赎回部分已落袋</div></div>
+      <div class="stat-card"><div class="label">累计收益</div><div class="value ${tone(sum.unreal + sum.realized)}">${sum.unreal + sum.realized >= 0 ? "+" : ""}${money(sum.unreal + sum.realized)}</div><div class="sub">浮动 + 已实现</div></div>
+    `;
+
+    const tb = document.getElementById("hold-rows");
+    const empty = document.getElementById("hold-empty");
+    if (!rows.length) {
+      tb.innerHTML = "";
+      empty.style.display = "block";
+    } else {
+      empty.style.display = "none";
+      tb.innerHTML = rows.map((r) => `
+        <tr>
+          <td class="left"><span class="prod-name">${r.productName}</span><span class="prod-org">${r.code}</span></td>
+          <td class="left"><span class="share-chip">${r.share}</span></td>
+          <td>${qty(r.shares)}</td>
+          <td>${money(r.cost)}</td>
+          <td>${r.shares > 0 ? nav6(r.cost / r.shares) : "--"}</td>
+          <td>${nav6(r.nav)}</td>
+          <td>${money(r.market)}</td>
+          <td class="${tone(r.unreal)}">${r.unreal == null ? "--" : (r.unreal >= 0 ? "+" : "") + money(r.unreal)}</td>
+          <td class="${tone(r.rate)}">${pct(r.rate)}</td>
+          <td class="${tone(r.realized)}">${r.realized >= 0 ? "+" : ""}${money(r.realized)}</td>
+          <td class="${tone(r.total)}">${r.total == null ? "--" : (r.total >= 0 ? "+" : "") + money(r.total)}</td>
+          <td style="color:var(--text2)">${r.navDate || "--"}</td>
+        </tr>`).join("");
+    }
+    document.getElementById("hold-hint").textContent = rows.length ? `共 ${rows.length} 个持仓` : "";
+  };
+
+  const renderTxns = () => {
+    const tb = document.getElementById("txn-rows");
+    const empty = document.getElementById("txn-empty");
+    const list = txns.slice().sort((a, b) =>
+      a.confirmDate === b.confirmDate ? String(b.createdAt).localeCompare(String(a.createdAt)) : b.confirmDate.localeCompare(a.confirmDate)
+    );
+    if (!list.length) {
+      tb.innerHTML = "";
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+    tb.innerHTML = list.map((t) => `
+      <tr>
+        <td class="left"><span class="badge ${t.type === "buy" ? "badge-buy" : "badge-sell"}">${t.type === "buy" ? "买入" : "赎回"}</span></td>
+        <td class="left"><span class="prod-name">${t.productName || t.code}</span><span class="prod-org">${t.code}</span></td>
+        <td class="left"><span class="share-chip">${t.share}</span></td>
+        <td>${t.applyDate}</td>
+        <td>${t.confirmDate}</td>
+        <td>${nav6(t.nav)}</td>
+        <td>${money(t.amount)}</td>
+        <td class="${t.type === "buy" ? "num-up" : "num-down"}">${t.type === "buy" ? "+" : "−"}${qty(t.shares)}</td>
+        <td>${t.fee ? money(t.fee) : "--"}</td>
+        <td class="left note-cell" title="${(t.note || "").replace(/"/g, "&quot;")}">${t.note || "--"}</td>
+        <td class="left"><button class="btn-link danger" data-del="${t.id}">删除</button></td>
+      </tr>`).join("");
+  };
+
+  /* ---------- 数据加载 ---------- */
+  const load = async () => {
+    try {
+      const j = await api(API, { method: "GET" });
+      txns = j.transactions || [];
+    } catch (e) {
+      offline = true;
+      document.getElementById("offline-banner").style.display = "block";
+    }
+    renderHoldings();
+    renderTxns();
+  };
+
+  /* ---------- 弹窗 ---------- */
+  const modal = document.getElementById("modal");
+  const elProd = document.getElementById("f-prod");
+  const elShare = document.getElementById("f-share");
+  const elApply = document.getElementById("f-apply");
+  const elConfirm = document.getElementById("f-confirm");
+  const elNav = document.getElementById("f-nav");
+  const elAmount = document.getElementById("f-amount");
+  const elShares = document.getElementById("f-shares");
+  const elFee = document.getElementById("f-fee");
+  const elNote = document.getElementById("f-note");
+  const elErr = document.getElementById("f-err");
+  const navTip = document.getElementById("nav-tip");
+
+  const fillProducts = () => {
+    elProd.innerHTML = productList.map((p) => `<option value="${p.code}">${p.name}</option>`).join("");
+    fillShares();
+  };
+  const fillShares = () => {
+    const p = productList.find((x) => x.code === elProd.value);
+    elShare.innerHTML = (p ? p.shares : []).map((s) => `<option value="${s}">${s}</option>`).join("");
+    autoNav();
+  };
+  const findNav = (code, share, date) => {
+    const map = navIndex[code + "|" + share] || {};
+    if (map[date] != null) return { nav: map[date], exact: true };
+    // 取该日期之前最近一个有净值的日期
+    const keys = Object.keys(map).filter((d) => d <= date).sort();
+    if (!keys.length) return { nav: null, exact: false };
+    const d = keys[keys.length - 1];
+    return { nav: map[d], exact: false, date: d };
+  };
+  const autoNav = () => {
+    if (!elConfirm.value || !elProd.value || !elShare.value) return;
+    const r = findNav(elProd.value, elShare.value, elConfirm.value);
+    if (r.nav != null) {
+      elNav.value = r.nav;
+      navTip.textContent = r.exact ? `已按 ${elConfirm.value} 的归档净值带出` : `该日无净值，已带出 ${r.date} 的净值`;
+    } else {
+      navTip.textContent = "归档中没有可用净值，请手动填写";
+    }
+    updateShareTip();
+  };
+  const positionOf = (code, share) => buildPositions().find((p) => p.code === code && p.share === share);
+  const updateShareTip = () => {
+    if (mode !== "sell") return;
+    const pos = positionOf(elProd.value, elShare.value);
+    const held = pos ? pos.shares : 0;
+    const tip = document.getElementById("share-tip");
+    tip.textContent = `当前持有 ${qty(held)} 份`;
+    if (pos && pos.shares > 0) elShares.max = String(pos.shares);
+  };
+
+  const openModal = (m) => {
+    mode = m;
+    elErr.textContent = "";
+    document.getElementById("modal-title").textContent = m === "buy" ? "买入" : "赎回";
+    document.getElementById("f-apply-label").textContent = m === "buy" ? "买入日期" : "赎回日期";
+    document.getElementById("f-amount-wrap").style.display = m === "buy" ? "" : "none";
+    document.getElementById("f-shares-wrap").style.display = m === "sell" ? "" : "none";
+    elAmount.value = "";
+    elShares.value = "";
+    elFee.value = "";
+    elNote.value = "";
+    elApply.value = todayStr();
+    elConfirm.value = todayStr();
+    fillProducts();
+    modal.classList.add("show");
+    setTimeout(() => elApply.focus(), 30);
+  };
+  const closeModal = () => modal.classList.remove("show");
+
+  [elProd].forEach((el) => el.addEventListener("change", fillShares));
+  [elConfirm, elShare].forEach((el) => el.addEventListener("change", autoNav));
+  elShares.addEventListener("input", updateShareTip);
+
+  document.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => openModal(b.dataset.act)));
+  document.getElementById("m-cancel").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+  document.getElementById("m-ok").addEventListener("click", async () => {
+    elErr.textContent = "";
+    if (offline) { elErr.textContent = "当前无法保存，请用 npm run dash 打开后再录入"; return; }
+    const payload = {
+      type: mode,
+      code: elProd.value,
+      share: elShare.value,
+      productName: (productList.find((p) => p.code === elProd.value) || {}).name || "",
+      applyDate: elApply.value,
+      confirmDate: elConfirm.value,
+      nav: Number(elNav.value),
+      fee: Number(elFee.value || 0),
+      note: elNote.value,
+      amount: mode === "buy" ? Number(elAmount.value) : undefined,
+      shares: mode === "sell" ? Number(elShares.value) : undefined,
+    };
+    if (mode === "sell") {
+      const pos = positionOf(elProd.value, elShare.value);
+      const held = pos ? pos.shares : 0;
+      if (payload.shares > held + 1e-6) { elErr.textContent = `赎回份额超过持有份额（当前持有 ${qty(held)} 份）`; return; }
+    }
+    try {
+      await api(API, { method: "POST", body: JSON.stringify(payload) });
+      closeModal();
+      await load();
+      document.querySelector('.tab[data-tab="holdings"]').click();
+    } catch (e) {
+      elErr.textContent = e.message;
+    }
+  });
+
+  document.getElementById("txn-rows").addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-del]");
+    if (!btn) return;
+    if (!confirm("确定删除这笔交易？持仓会随之重算。")) return;
+    try {
+      await api(API + "/" + btn.dataset.del, { method: "DELETE" });
+      await load();
+    } catch (err) {
+      alert("删除失败：" + err.message);
+    }
+  });
+
+  /* ---------- 页签切换 ---------- */
+  document.querySelectorAll(".tab").forEach((t) => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((x) => x.classList.toggle("active", x === t));
+      document.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + t.dataset.tab));
+    });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

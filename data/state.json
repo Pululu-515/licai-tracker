@@ -1,0 +1,44 @@
+{
+  "lastNewDataDate": "2026-11-06",
+  "history": {
+    "2026-11-05": {
+      "at": "2026/11/5 16:45:21",
+      "gotNew": true,
+      "report": [
+        {
+          "code": "Z7001626000675",
+          "ok": true,
+          "name": "招银理财招睿添利日开25号固定收益类理财计划",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-04",
+          "totalRows": 65
+        }
+      ]
+    },
+    "2026-11-06": {
+      "at": "2026/11/6 16:20:40",
+      "gotNew": true,
+      "report": [
+        {
+          "code": "Z7001026000481",
+          "ok": true,
+          "name": "中银理财-稳富纯债14天持有期4号",
+          "shares": 1,
+          "newRows": 48,
+          "latestDate": "2026-11-04",
+          "totalRows": 48
+        },
+        {
+          "code": "Z7001026000529",
+          "ok": true,
+          "name": "中银理财-稳富全球配置日开",
+          "shares": 1,
+          "newRows": 78,
+          "latestDate": "2026-11-04",
+          "totalRows": 78
+        }
+      ]
+    }
+  }
+}
