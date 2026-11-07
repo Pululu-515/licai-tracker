@@ -168,6 +168,8 @@ const DUAL_SOURCES = {
   Z7008926000543: { primary: "bob", fallback: "chinawealth", canonicalShare: "YJ01260819A" },
   Z7008926000548: { primary: "bob", fallback: "chinawealth", canonicalShare: "YJ01260820A" },
   Z7006926001306: { primary: "chinawealth", fallback: "spdb", canonicalShare: "2501260175" },
+  // 徽银：同一官网的两个页面互为备用（数据一致，income_list 为主源）
+  Z7002426000328: { primary: "hsbank", fallback: "hsbank_display", canonicalShare: "PNHY260395A" },
 };
 
 /** 徽银理财官网数据源（hsbankwm.com）：服务端直出 HTML 表格，分页 ?id=xx&page=N */
@@ -395,7 +397,11 @@ async function fetchProductSpdb(code) {
 }
 
 /** 徽银理财官网数据源（hsbankwm.com，服务端直出 HTML 表格，分页 ?id=xx&page=N） */
-async function fetchProductHsbank(code) {
+/** 徽银理财官网数据源（hsbankwm.com）：服务端直出 HTML 表格，分页 ?id=xx&page=N
+ *  同一产品有两个页面（数据一致，分页大小不同），互为备用：
+ *    lccs_income_list.php（主源）与 lccs_display.php（备用，见 DUAL_SOURCES）
+ */
+async function fetchProductHsbank(code, listPage = "lccs_income_list.php") {
   const src = HSBANK_SOURCES[code];
   const { default: puppeteer } = await import("puppeteer-core");
   const browser = await puppeteer.launch({
@@ -425,7 +431,7 @@ async function fetchProductHsbank(code) {
         return { rows, maxPage };
       });
 
-    const listUrl = (p) => `${src.site}/lccs_income_list.php?id=${src.id}${p > 1 ? `&page=${p}` : ""}`;
+    const listUrl = (p) => `${src.site}/${listPage}?id=${src.id}${p > 1 ? `&page=${p}` : ""}`;
     // 该站点偶发返回空表（约 5%），需显式等待表格渲染并重试
     const loadPage = async (p, attempts = 3) => {
       for (let a = 1; a <= attempts; a++) {
@@ -721,6 +727,8 @@ const SOURCE_FETCHERS = {
   chinawealth: (code) => fetchProduct(code),
   bob: (code) => fetchProductBob(code),
   spdb: (code) => fetchProductSpdb(code),
+  hsbank: (code) => fetchProductHsbank(code),
+  hsbank_display: (code) => fetchProductHsbank(code, "lccs_display.php"),
 };
 
 /* ==================== 指标计算 ==================== */
