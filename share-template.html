@@ -553,7 +553,7 @@ function openEditor() {
     if (state.optionIndex < 0) return;
     const found = navOnDate(options[state.optionIndex].code, q('confirmDate').value);
     if (found) {
-      q('navInput').value = found.nav.toFixed(4);
+      q('navInput').value = found.nav.toFixed(6);
       q('navHint').textContent = '已按 ' + found.date + ' 净值自动带出';
       refresh();
     }
@@ -564,7 +564,7 @@ function openEditor() {
     const opt = options[state.optionIndex];
     if (opt) {
       const latest = latestNav(opt.code);
-      q('navHint').textContent = latest ? '最新披露 ' + latest.date + '：' + latest.nav.toFixed(4) : '该份额暂无净值数据';
+      q('navHint').textContent = latest ? '最新披露 ' + latest.date + '：' + latest.nav.toFixed(6) : '该份额暂无净值数据';
       applyNav();
     }
   });
