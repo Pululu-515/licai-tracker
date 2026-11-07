@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: 安装依赖（无头浏览器驱动）
+        run: npm install --no-audit --no-fund
+
       - name: 抓取并归档净值
         run: node scripts/update_daily.mjs --daily
 

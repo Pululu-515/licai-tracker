@@ -90,14 +90,12 @@ const BOB_SOURCES = {
     prodCode: "YJ01260819", // 母产品代码（诚享7天持有期33号）
     shareClass: "A类", // 目标份额：33号A（YJ01260819A）
     canonicalShare: "YJ01260819A", // 归档份额 key（备用源数据会映射回这个 key）
-    fallback: true, // 主源（官网）拿不到最新净值时，自动改用中国理财网备用源
   },
   Z7008926000548: {
     site: "https://www.beijingbobwealth.com.cn",
     prodCode: "YJ01260820", // 母产品代码（诚享7天持有期34号）
     shareClass: "A类", // 目标份额：34号A（YJ01260820A）
     canonicalShare: "YJ01260820A",
-    fallback: true,
   },
 };
 
@@ -152,7 +150,25 @@ const ABC_SOURCES = {
 //   Z7006926001747 https://xinxipilu.chinawealth.com.cn/queryMenu/prodType/prodTypeDetail?prodRegCode=Z7006926001747
 // 不再需要 spdb-wm.com 官网源（fetchProductSpdb 函数保留备用，SPDB_SOURCES 清空后不会被调用）
 //   旧官网源: POST https://www.spdb-wm.com/api/search  chlid=1008 为净值列表, searchword 用子份额表达式
-const SPDB_SOURCES = {};
+// 浦银理财官网数据源（spdb-wm.com）：无头浏览器页面内 fetch，POST /api/search 分页取净值
+//   详情页 https://www.spdb-wm.com/financialProducts/cpxq.shtml?REAL_PRD_CODE=2301260750
+//   检索接口的 searchword 用份额代码（与理财网一致），REAL_PRD_CODE 仅详情页参数
+const SPDB_SOURCES = {
+  Z7006926001306: {
+    site: "https://www.spdb-wm.com",
+    subShareCode: "2501260175", // 双周鑫116号A类份额
+    realPrdCode: "2301260750",
+  },
+};
+
+// 双数据源编排：主源拿不到最新净值（失败或披露滞后）时，自动尝试备用源
+//   primary/fallback 取值对应 SOURCE_FETCHERS（chinawealth = 中国理财网通用通道）
+//   canonicalShare = 主源归档使用的份额 key，备用源数据统一映射回它
+const DUAL_SOURCES = {
+  Z7008926000543: { primary: "bob", fallback: "chinawealth", canonicalShare: "YJ01260819A" },
+  Z7008926000548: { primary: "bob", fallback: "chinawealth", canonicalShare: "YJ01260820A" },
+  Z7006926001306: { primary: "chinawealth", fallback: "spdb", canonicalShare: "2501260175" },
+};
 
 /** 徽银理财官网数据源（hsbankwm.com）：服务端直出 HTML 表格，分页 ?id=xx&page=N */
 const HSBANK_SOURCES = {
@@ -649,27 +665,26 @@ function latestDateOf(fetched) {
 }
 
 /**
- * 北银产品双数据源：主源为北银理财官网，备用源为中国理财网。
- * 主源失败、或主源最新净值日期落后于备用源（官网披露常滞后）时，采用备用源。
- * 备用源的份额代码与官网不同，统一映射回 canonicalShare，保证归档 key 稳定。
+ * 双数据源编排（DUAL_SOURCES）：主源失败、或主源最新净值日期落后于备用源时，采用备用源。
+ * 备用源数据统一映射回 cfg.canonicalShare，并用增量合并写入——
+ * 防止备用源历史较短导致归档缩水；主源恢复后由其 replaceAll 刷回官方口径。
  */
-async function fetchProductBobWithFallback(code) {
-  const src = BOB_SOURCES[code];
+async function fetchDualSource(code, cfg) {
   let primary = null, primaryErr = null;
   try {
-    primary = await fetchProductBob(code);
+    primary = await SOURCE_FETCHERS[cfg.primary](code);
   } catch (e) {
     primaryErr = e;
-    log(`  ${code} 北银官网主源失败: ${e.message}`);
+    log(`  ${code} 主源(${cfg.primary})失败: ${e.message}`);
   }
 
-  // 主源成功时也拉一次备用源对比新旧，避免官网披露滞后于理财网
+  // 主源成功时也拉一次备用源对比新旧，避免主源披露滞后
   let fallback = null, fallbackErr = null;
   try {
-    fallback = await fetchProduct(code);
+    fallback = await SOURCE_FETCHERS[cfg.fallback](code);
   } catch (e) {
     fallbackErr = e;
-    log(`  ${code} 中国理财网备用源失败: ${e.message}`);
+    log(`  ${code} 备用源(${cfg.fallback})失败: ${e.message}`);
   }
 
   const pDate = primary ? latestDateOf(primary) : null;
@@ -677,31 +692,36 @@ async function fetchProductBobWithFallback(code) {
 
   // 主源可用且不落后于备用源 → 用主源
   if (primary && pDate && (!fDate || pDate >= fDate)) {
-    if (fDate) log(`  ${code} 主源最新 ${pDate}，备用源最新 ${fDate}，采用北银官网数据`);
+    if (fDate) log(`  ${code} 主源最新 ${pDate}，备用源最新 ${fDate}，采用主源(${cfg.primary})数据`);
     return primary;
   }
 
   // 备用源有数据（主源失败，或备用源更新）→ 用备用源
   if (fallback && fDate) {
-    log(`  ${code} 采用中国理财网备用源（官网最新 ${pDate || "无"}，理财网最新 ${fDate}）`);
+    log(`  ${code} 采用备用源(${cfg.fallback})（主源最新 ${pDate || "无"}，备用源最新 ${fDate}）`);
     const rows = Object.values(fallback.shares)
       .flat()
       .filter((r) => r.nav)
       .sort((a, b) => a.date.localeCompare(b.date));
     if (!rows.length) throw primaryErr || fallbackErr || new Error("备用源无有效净值");
+    const canonical = cfg.canonicalShare || Object.keys(fallback.shares)[0];
     return {
       prodRegCode: code,
       name: fallback.name || primary?.name || "",
-      orgName: "北银理财有限责任公司",
-      shares: { [src.canonicalShare]: rows },
-      // 备用源用增量合并而非整段替换：理财网历史可能短于官网，替换会缩短归档；
-      // 官网恢复后其 replaceAll 会把全部数据刷回官方口径
+      orgName: fallback.orgName || primary?.orgName || "",
+      shares: { [canonical]: rows },
       replaceAll: false,
     };
   }
 
   throw primaryErr || fallbackErr || new Error("两个数据源均无可用净值");
 }
+
+const SOURCE_FETCHERS = {
+  chinawealth: (code) => fetchProduct(code),
+  bob: (code) => fetchProductBob(code),
+  spdb: (code) => fetchProductSpdb(code),
+};
 
 /* ==================== 指标计算 ==================== */
 
@@ -906,11 +926,11 @@ async function main() {
       let lastErr = null;
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-          fetched = BOB_SOURCES[code]
-            ? BOB_SOURCES[code].fallback
-              ? await fetchProductBobWithFallback(code)
-              : await fetchProductBob(code)
-            : CMB_SOURCES[code]
+          fetched = DUAL_SOURCES[code]
+            ? await fetchDualSource(code, DUAL_SOURCES[code])
+            : BOB_SOURCES[code]
+              ? await fetchProductBob(code)
+              : CMB_SOURCES[code]
               ? await fetchProductCmb(code)
               : ABC_SOURCES[code]
                 ? await fetchProductAbc(code)
