@@ -37,6 +37,10 @@ jobs:
       - name: 生成静态站点
         run: node scripts/export_site.mjs
 
+      # 小程序「手动更新」按钮从 Pages 拉取的数据快照
+      - name: 导出小程序数据快照
+        run: node scripts/export_miniprogram_data.mjs --json site/nav-data.json
+
       - name: 提交归档与站点变更
         run: |
           git config user.name "github-actions[bot]"
