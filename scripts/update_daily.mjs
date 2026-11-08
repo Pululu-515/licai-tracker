@@ -309,11 +309,36 @@ function normNum(v) {
 
 async function fetchProduct(prodRegCode) {
   const detail = await postRetry("/product/getProductDetail", { prodRegCode, pageNum: 1, pageSize: 10 });
-  if (!detail || detail.code !== 200) throw new Error(`获取产品详情失败: ${prodRegCode}`);
-  const basic = detail.data?.prodBasicInfoVo ?? {};
-  let shares = detail.data?.productTypeNetValueVo?.subShareList?.map((s) => s.subShareCode) ?? [];
-  if (SHARE_FILTER[prodRegCode]) {
-    shares = shares.filter((s) => SHARE_FILTER[prodRegCode].includes(s));
+  let basic = {};
+  let shares = null;
+  if (detail && detail.code === 200) {
+    basic = detail.data?.prodBasicInfoVo ?? {};
+    shares = detail.data?.productTypeNetValueVo?.subShareList?.map((s) => s.subShareCode) ?? [];
+    if (SHARE_FILTER[prodRegCode]) {
+      shares = shares.filter((s) => SHARE_FILTER[prodRegCode].includes(s));
+    }
+  }
+  // 详情接口被平台限流/风控时的降级：用份额过滤配置或既有归档的份额列表，
+  // 直接抓净值（getNetValueLine 不依赖详情接口），名称沿用归档，避免整只产品漏更新。
+  if (!shares || shares.length === 0) {
+    const archiveFile = path.join(DATA_DIR, `${prodRegCode}.json`);
+    let archivedMeta = null;
+    try {
+      archivedMeta = JSON.parse(fs.readFileSync(archiveFile, "utf8"));
+    } catch {}
+    if (SHARE_FILTER[prodRegCode]) {
+      shares = SHARE_FILTER[prodRegCode];
+    } else if (archivedMeta?.shares && Object.keys(archivedMeta.shares).length > 0) {
+      shares = Object.keys(archivedMeta.shares);
+    }
+    if (!shares || shares.length === 0) {
+      throw new Error(`获取产品详情失败: ${prodRegCode}`);
+    }
+    log(`${prodRegCode} 详情接口不可用，降级为已知份额列表: ${shares.join(",")}`);
+    if (archivedMeta?.prodName) {
+      basic.prodName = archivedMeta.prodName;
+      basic.orgName = archivedMeta.orgName;
+    }
   }
 
   const shareData = {};
