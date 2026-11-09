@@ -6,6 +6,14 @@ on:
     - cron: "50 22 * * *"
     - cron: "0 0 * * *"
   workflow_dispatch: {}
+  # 手动补抓/修数据后 push 即自动重建站点并部署到 Pages（无变更时不会重复提交，不会死循环）
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "site/**"
+      - "scripts/**"
+      - ".github/workflows/update.yml"
 
 permissions:
   contents: write
