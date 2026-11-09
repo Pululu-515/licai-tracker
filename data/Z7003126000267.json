@@ -3,9 +3,9 @@
   "prodName": "苏银理财恒源鑫泰量化日开1号",
   "orgName": "苏银理财有限责任公司",
   "source": "chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/8 05:41:20",
-  "lastChangeAt": "2026/11/6 14:05:05",
-  "valuesSig": "193e5d891329ad3e",
+  "lastUpdated": "2026/11/9 02:04:16",
+  "lastChangeAt": "2026/11/9 02:04:16",
+  "valuesSig": "1594233407a69965",
   "shares": {
     "J23852": {
       "rows": [
@@ -573,6 +573,13 @@
           "date": "2026-11-05",
           "nav": "1.010545",
           "acumlt": "1.010545",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-06",
+          "nav": "1.010792",
+          "acumlt": "1.010792",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
