@@ -3,9 +3,9 @@
   "prodName": "中银理财-稳富全球配置日开",
   "orgName": "中银理财有限责任公司",
   "source": "chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/10 10:22:28",
-  "lastChangeAt": "2026/11/9 13:58:56",
-  "valuesSig": "6895b777e2ba8a39",
+  "lastUpdated": "2026/11/10 16:20:55",
+  "lastChangeAt": "2026/11/10 16:20:55",
+  "valuesSig": "1ef411f0db21064c",
   "shares": {
     "WFQQPZRKA": {
       "rows": [
@@ -559,6 +559,13 @@
           "date": "2026-11-05",
           "nav": "1.012876",
           "acumlt": "1.012876",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-06",
+          "nav": "1.012944",
+          "acumlt": "1.012944",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
