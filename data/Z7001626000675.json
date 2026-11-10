@@ -3,9 +3,9 @@
   "prodName": "招银理财招睿添利日开25号固定收益类理财计划",
   "orgName": "招银理财有限责任公司",
   "source": "cmbchinawm.com（招银理财官网）",
-  "lastUpdated": "2026/11/9 16:47:47",
-  "lastChangeAt": "2026/11/9 07:12:03",
-  "valuesSig": "144e61d42e87199d",
+  "lastUpdated": "2026/11/10 08:50:41",
+  "lastChangeAt": "2026/11/10 08:50:41",
+  "valuesSig": "db3ca3fb63fc5501",
   "shares": {
     "132152A": {
       "rows": [
@@ -475,6 +475,13 @@
           "date": "2026-11-06",
           "nav": "1.0096",
           "acumlt": "1.0096",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-09",
+          "nav": "1.0098",
+          "acumlt": "1.0098",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
