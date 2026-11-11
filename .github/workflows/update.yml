@@ -2,10 +2,8 @@ name: 每日净值更新
 
 on:
   schedule:
-    # GitHub Actions 用 UTC 时间，以下对应北京时间 06:50 / 08:00 / 09:00
-    - cron: "50 22 * * *"
+    # GitHub Actions 用 UTC 时间，对应北京时间 08:00（每日一次）
     - cron: "0 0 * * *"
-    - cron: "0 1 * * *"
   workflow_dispatch: {}
   # 手动补抓/修数据后 push 即自动重建站点并部署到 Pages（无变更时不会重复提交，不会死循环）
   push:
