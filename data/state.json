@@ -1,5 +1,5 @@
 {
-  "lastNewDataDate": "2026-11-10",
+  "lastNewDataDate": "2026-11-11",
   "history": {
     "2026-11-05": {
       "at": "2026/11/5 16:45:21",
@@ -429,8 +429,8 @@
       ]
     },
     "2026-11-11": {
-      "at": "2026/11/11 02:21:47",
-      "gotNew": false,
+      "at": "2026/11/11 02:40:39",
+      "gotNew": true,
       "report": [
         {
           "code": "Z7003126000267",
@@ -447,8 +447,8 @@
           "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-09",
-          "totalRows": 164
+          "latestDate": "2026-11-10",
+          "totalRows": 165
         },
         {
           "code": "Z7001126000218",
@@ -465,8 +465,8 @@
           "name": "浦银理财双周鑫最短持有期116号理财产品",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-09",
-          "totalRows": 57
+          "latestDate": "2026-11-10",
+          "totalRows": 58
         },
         {
           "code": "Z7002426000328",
@@ -515,8 +515,8 @@
           "name": "中银理财-稳富纯债14天持有期4号",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 50
+          "latestDate": "2026-11-10",
+          "totalRows": 52
         },
         {
           "code": "Z7001026000529",
@@ -524,8 +524,8 @@
           "name": "中银理财-稳富全球配置日开",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 80
+          "latestDate": "2026-11-10",
+          "totalRows": 82
         },
         {
           "code": "Z7008926000549",
