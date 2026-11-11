@@ -40,6 +40,7 @@ const PRODUCTS = (process.env.PRODUCTS || "").split(",").filter(Boolean).length
   "Z7001626000675",
   "Z7001026000481",
   "Z7001026000529",
+  "Z7008926000549",
 ];
 
 // 完整产品清单：看板重建始终使用它，不受 PRODUCTS 环境变量过滤影响，
@@ -56,6 +57,7 @@ const ALL_PRODUCTS = [
   "Z7001626000675",
   "Z7001026000481",
   "Z7001026000529",
+  "Z7008926000549",
 ];
 
 // 年化口径（标准净值型理财口径，2026-11-05 修正）：
@@ -96,6 +98,12 @@ const BOB_SOURCES = {
     prodCode: "YJ01260820", // 母产品代码（诚享7天持有期34号）
     shareClass: "A类", // 目标份额：34号A（YJ01260820A）
     canonicalShare: "YJ01260820A",
+  },
+  Z7008926000549: {
+    site: "https://www.beijingbobwealth.com.cn",
+    prodCode: "YJ01260823", // 母产品代码（智远21天持有期1号，2026-08-21 成立）
+    shareClass: "A类", // 目标份额：智远21天1号A（YJ01260823A）
+    canonicalShare: "YJ01260823A",
   },
 };
 
