@@ -3,9 +3,9 @@
   "prodName": "徽银理财安盈稳健日开7号理财产品260395",
   "orgName": "徽银理财有限责任公司",
   "source": "hsbankwm.com（徽银理财官网）",
-  "lastUpdated": "2026/11/11 02:38:08",
-  "lastChangeAt": "2026/11/11 09:31:45",
-  "valuesSig": "c6e5d4263fd13cd5",
+  "lastUpdated": "2026/11/11 23:12:22",
+  "lastChangeAt": "2026/11/11 23:12:22",
+  "valuesSig": "da603b6c99e96d27",
   "shares": {
     "PNHY260395A": {
       "rows": [
@@ -153,6 +153,11 @@
           "date": "2026-11-10",
           "nav": "1.004833",
           "acumlt": "1.004833"
+        },
+        {
+          "date": "2026-11-11",
+          "nav": "1.004750",
+          "acumlt": "1.004750"
         }
       ]
     }
