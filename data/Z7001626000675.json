@@ -3,89 +3,12 @@
   "prodName": "招银理财招睿添利日开25号固定收益类理财计划",
   "orgName": "招银理财有限责任公司",
   "source": "cmbchinawm.com（招银理财官网）",
-  "lastUpdated": "2026/11/11 09:32:39",
-  "lastChangeAt": "2026/11/11 09:32:39",
-  "valuesSig": "fa3a8fdc5148eefe",
+  "lastUpdated": "2026/11/11 09:47:26",
+  "lastChangeAt": "2026/11/11 09:47:26",
+  "valuesSig": "6661014ec299433c",
   "shares": {
     "132152A": {
       "rows": [
-        {
-          "date": "2026-07-28",
-          "nav": "1.0000",
-          "acumlt": "1.0000",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-07-29",
-          "nav": "1.0000",
-          "acumlt": "1.0000",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-07-30",
-          "nav": "1.0001",
-          "acumlt": "1.0001",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-07-31",
-          "nav": "1.0001",
-          "acumlt": "1.0001",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-03",
-          "nav": "1.0002",
-          "acumlt": "1.0002",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-04",
-          "nav": "1.0002",
-          "acumlt": "1.0002",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-05",
-          "nav": "1.0002",
-          "acumlt": "1.0002",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-06",
-          "nav": "1.0003",
-          "acumlt": "1.0003",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-07",
-          "nav": "1.0012",
-          "acumlt": "1.0012",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-10",
-          "nav": "1.0013",
-          "acumlt": "1.0013",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
-        {
-          "date": "2026-08-11",
-          "nav": "1.0013",
-          "acumlt": "1.0013",
-          "yieldPerMyriad": "",
-          "yieldSevenDay": ""
-        },
         {
           "date": "2026-08-12",
           "nav": "1.0013",
