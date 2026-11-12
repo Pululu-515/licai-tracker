@@ -352,15 +352,28 @@ function renderDashboard() {
     });
   }));
   items.sort((a, b) => {
-    const x = a[sortKey], y = b[sortKey];
-    const xe = x === null || x === undefined || x === '', ye = y === null || y === undefined || y === '';
-    if (xe && ye) return 0; if (xe) return 1; if (ye) return -1;
-    if (typeof x === 'string' || typeof y === 'string') {
-      const r = String(x) < String(y) ? -1 : String(x) > String(y) ? 1 : 0;
-      return sortDesc ? -r : r;
+    const cmp = (x, y) => {
+      const xe = x === null || x === undefined || x === '', ye = y === null || y === undefined || y === '';
+      if (xe && ye) return 0; if (xe) return 1; if (ye) return -1;
+      if (typeof x === 'string' || typeof y === 'string') {
+        const r = String(x) < String(y) ? -1 : String(x) > String(y) ? 1 : 0;
+        return sortDesc ? -r : r;
+      }
+      if (x === y) return 0;
+      return sortDesc ? y - x : x - y;
+    };
+    let r = cmp(a[sortKey], b[sortKey]);
+    // 按净值日期排序时，同一净值日内按当日万收倒序（无数据排最后）
+    if (r === 0 && sortKey === 'date') {
+      const wa = a.wanToday, wb = b.wanToday;
+      const wea = wa === null || wa === undefined || wa === '' || !Number.isFinite(Number(wa));
+      const web = wb === null || wb === undefined || wb === '' || !Number.isFinite(Number(wb));
+      if (wea && web) r = 0;
+      else if (wea) r = 1;
+      else if (web) r = -1;
+      else r = wb - wa;
     }
-    if (x === y) return 0;
-    return sortDesc ? y - x : x - y;
+    return r;
   });
 
   content.innerHTML = `
