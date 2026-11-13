@@ -3,8 +3,8 @@
   "prodName": "北银理财京华远见春系列诚享7天持有期33号理财产品",
   "orgName": "北银理财有限责任公司",
   "source": "beijingbobwealth.com.cn（北银理财官网）",
-  "lastUpdated": "2026/11/13 00:36:29",
-  "lastChangeAt": "2026/11/12 09:15:09",
+  "lastUpdated": "2026-11-13T00:56:40.401Z",
+  "lastChangeAt": "2026-11-13T00:56:40.401Z",
   "valuesSig": "9660a503ee0b211c",
   "shares": {
     "YJ01260819A": {
@@ -286,6 +286,13 @@
           "date": "2026-11-11",
           "nav": "1.006102",
           "acumlt": "1.006102",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-12",
+          "nav": "1.006017",
+          "acumlt": "1.006017",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
