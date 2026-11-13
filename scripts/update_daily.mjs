@@ -41,6 +41,7 @@ const PRODUCTS = (process.env.PRODUCTS || "").split(",").filter(Boolean).length
   "Z7001026000481",
   "Z7001026000529",
   "Z7008926000549",
+  "Z7001426001893",
 ];
 
 // 完整产品清单：看板重建始终使用它，不受 PRODUCTS 环境变量过滤影响，
@@ -58,6 +59,7 @@ const ALL_PRODUCTS = [
   "Z7001026000481",
   "Z7001026000529",
   "Z7008926000549",
+  "Z7001426001893",
 ];
 
 // 年化口径（标准净值型理财口径，2026-11-05 修正）：
@@ -78,6 +80,7 @@ const SHARE_FILTER = {
   Z7003126000267: ["J23852"],
   Z7008926000543: ["YJ01260819A"],
   Z7001626000675: ["132152A"],
+  Z7001426001893: ["EW8730D"],
 };
 
 // 特殊数据源：不走中国理财网，改用发行机构官网
@@ -153,6 +156,21 @@ const ABC_SOURCES = {
   },
 };
 
+// 光大理财官网（www.cebwm.com）：瑞数反爬，纯 HTTP 直连返回 412、XHR 报文加密，
+//   但「渲染后的 DOM 是明文」——用无头 Chrome 打开详情页，直接从头部读
+//   「X.XXXX / 份额净值（YYYY-MM-DD）」，只取最新一条（历史由备用源中国理财网补齐）。
+//   详情页 https://www.cebwm.com/wealth/lcxx/lccp14/254999669/index.html
+//   净值列表在 iframe /wealth/lcxx/jjjz87/index.html（每页仅 25 行、分页麻烦，故不用）
+const CEB_SOURCES = {
+  Z7001426001893: {
+    site: "https://www.cebwm.com",
+    detailPath: "/wealth/lcxx/lccp14/254999669/index.html",
+    share: "EW8730D", // 产品编号 EW8730D = 阳光金日添利9号D
+    prodName: "阳光金日添利9号D",
+    orgName: "光大理财有限责任公司",
+  },
+};
+
 // 浦银理财：2026-11-06 起两个产品均改回中国理财网数据源
 //   Z7006926001306 https://xinxipilu.chinawealth.com.cn/queryMenu/prodType/prodTypeDetail?prodRegCode=Z7006926001306
 //   Z7006926001747 https://xinxipilu.chinawealth.com.cn/queryMenu/prodType/prodTypeDetail?prodRegCode=Z7006926001747
@@ -178,6 +196,8 @@ const DUAL_SOURCES = {
   Z7006926001306: { primary: "chinawealth", fallback: "spdb", canonicalShare: "2501260175" },
   // 徽银：同一官网的两个页面互为备用（数据一致，income_list 为主源）
   Z7002426000328: { primary: "hsbank", fallback: "hsbank_display", canonicalShare: "PNHY260395A" },
+  // 光大：官网比中国理财网早一天披露，主源取官网最新一条，历史靠理财网补齐
+  Z7001426001893: { primary: "ceb", fallback: "chinawealth", canonicalShare: "EW8730D" },
 };
 
 /** 徽银理财官网数据源（hsbankwm.com）：服务端直出 HTML 表格，分页 ?id=xx&page=N */
@@ -692,6 +712,64 @@ async function fetchProductBob(code) {
   };
 }
 
+/**
+ * 光大理财官网数据源（www.cebwm.com）
+ *
+ * 该站有瑞数反爬：纯 HTTP 直连返回 412 动态挑战页，XHR 请求/响应均为加密报文。
+ * 但页面「渲染后的 DOM 文本是明文」，所以用无头 Chrome 打开详情页后直接读头部：
+ *     "1.0100\n份额净值（2026-11-12）"
+ * 只取最新一条（官网比中国理财网早一天），历史净值由备用源（中国理财网）合并补齐，
+ * 因此返回 replaceAll: false，交给增量合并逻辑。
+ */
+async function fetchProductCeb(code) {
+  const src = CEB_SOURCES[code];
+  if (!src) throw new Error(`未配置光大理财数据源: ${code}`);
+  const { default: puppeteer } = await import("puppeteer-core");
+  const browser = await puppeteer.launch({
+    executablePath: CHROME_PATH,
+    headless: "new",
+    args: ["--no-sandbox", "--disable-gpu", "--disable-blink-features=AutomationControlled"],
+  });
+  try {
+    const page = await browser.newPage();
+    await page.setUserAgent(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+    );
+    await page.setViewport({ width: 1400, height: 1000 });
+    await page.goto(src.site + src.detailPath, { waitUntil: "domcontentloaded", timeout: 90000 });
+    // 瑞数挑战 + 页面渲染需要几秒，等「份额净值（日期）」出现
+    await page
+      .waitForFunction(() => /份额净值（\d{4}-\d{2}-\d{2}）/.test(document.body.innerText || ""), {
+        timeout: 45000,
+        polling: 500,
+      })
+      .catch(() => {});
+
+    const snippet = await page.evaluate(() => {
+      const t = document.body.innerText || "";
+      const i = t.indexOf("份额净值（");
+      if (i < 0) return "";
+      return t.slice(Math.max(0, i - 60), i + 30);
+    });
+    const m = snippet.match(/([0-9]+(?:\.[0-9]+)?)\s*份额净值（(\d{4}-\d{2}-\d{2})）/);
+    if (!m) throw new Error(`光大详情页未解析到净值，页面片段: ${JSON.stringify(snippet.slice(-60))}`);
+    const navVal = m[1];
+    const date = m[2];
+    const nav = normNum(navVal);
+    if (!nav) throw new Error(`光大净值异常: ${navVal}`);
+    log(`  ${code} 光大官网最新 ${date} 净值 ${nav}`);
+    return {
+      prodRegCode: code,
+      name: src.prodName,
+      orgName: src.orgName,
+      shares: { [src.share]: [{ date, nav, acumlt: nav, yieldPerMyriad: "", yieldSevenDay: "" }] },
+      replaceAll: false, // 只有 1 条最新值，历史靠备用源合并
+    };
+  } finally {
+    await browser.close().catch(() => {});
+  }
+}
+
 /** 取一组抓取结果中的最新净值日期（无数据返回 null） */
 function latestDateOf(fetched) {
   let latest = null;
@@ -762,6 +840,7 @@ const SOURCE_FETCHERS = {
   spdb: (code) => fetchProductSpdb(code),
   hsbank: (code) => fetchProductHsbank(code),
   hsbank_display: (code) => fetchProductHsbank(code, "lccs_display.php"),
+  ceb: (code) => fetchProductCeb(code),
 };
 
 /* ==================== 指标计算 ==================== */
@@ -1055,7 +1134,9 @@ async function main() {
               ? "spdb-wm.com（浦银理财官网）"
               : HSBANK_SOURCES[code]
                 ? "hsbankwm.com（徽银理财官网）"
-                : "chinawealth.com.cn（中国理财网）",
+                : CEB_SOURCES[code]
+                  ? "cebwm.com（光大理财官网）+ chinawealth.com.cn（中国理财网）"
+                  : "chinawealth.com.cn（中国理财网）",
       lastUpdated: nowStr,      // 最近一次检查时间（每次运行都会变，仅用于排查）
       lastChangeAt,             // 当前这批净值被获取到的时间（净值不变则不变，看板展示用）
       valuesSig: sig,
