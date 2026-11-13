@@ -1,5 +1,5 @@
 {
-  "lastNewDataDate": "2026-11-12",
+  "lastNewDataDate": "2026-11-13",
   "history": {
     "2026-11-05": {
       "at": "2026/11/5 16:45:21",
@@ -645,6 +645,116 @@
           "newRows": 0,
           "latestDate": "2026-11-10",
           "totalRows": 52
+        }
+      ]
+    },
+    "2026-11-13": {
+      "at": "2026/11/13 00:39:02",
+      "gotNew": true,
+      "report": [
+        {
+          "code": "Z7003126000267",
+          "ok": true,
+          "name": "苏银理财恒源鑫泰量化日开1号",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 85
+        },
+        {
+          "code": "Z7007126000099",
+          "ok": true,
+          "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 166
+        },
+        {
+          "code": "Z7001126000218",
+          "ok": true,
+          "name": "农银理财农银匠心·灵动14天理财产品第9期",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-12",
+          "totalRows": 96
+        },
+        {
+          "code": "Z7006926001306",
+          "ok": true,
+          "name": "浦银理财双周鑫最短持有期116号理财产品",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 59
+        },
+        {
+          "code": "Z7002426000328",
+          "ok": true,
+          "name": "徽银理财安盈稳健日开7号理财产品260395",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-12",
+          "totalRows": 31
+        },
+        {
+          "code": "Z7008926000543",
+          "ok": true,
+          "name": "北银理财京华远见春系列诚享7天持有期33号理财产品",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 40
+        },
+        {
+          "code": "Z7006926001747",
+          "ok": true,
+          "name": "浦银理财益恒利周周定开1号",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-09",
+          "totalRows": 17
+        },
+        {
+          "code": "Z7008926000548",
+          "ok": true,
+          "name": "北银理财京华远见春系列诚享7天持有期34号理财产品",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 43
+        },
+        {
+          "code": "Z7001626000675",
+          "ok": false,
+          "error": "招银理财净值接口未返回数据"
+        },
+        {
+          "code": "Z7001026000481",
+          "ok": true,
+          "name": "中银理财-稳富纯债14天持有期4号",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 53
+        },
+        {
+          "code": "Z7001026000529",
+          "ok": true,
+          "name": "中银理财-稳富全球配置日开",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 83
+        },
+        {
+          "code": "Z7008926000549",
+          "ok": true,
+          "name": "北银理财京华远见春系列智远21天持有期1号理财产品",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 53
         }
       ]
     }
