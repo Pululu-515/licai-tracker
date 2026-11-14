@@ -3,9 +3,9 @@
   "prodName": "浦银理财双周鑫最短持有期116号理财产品",
   "orgName": "浦银理财有限责任公司",
   "source": "spdb-wm.com（浦银理财官网）",
-  "lastUpdated": "2026/11/13 00:36:02",
-  "lastChangeAt": "2026/11/13 00:36:02",
-  "valuesSig": "3a0097bf74d665a7",
+  "lastUpdated": "2026/11/14 02:34:15",
+  "lastChangeAt": "2026/11/14 02:34:15",
+  "valuesSig": "5b47b14f00336a60",
   "shares": {
     "2501260175": {
       "rows": [
@@ -419,6 +419,13 @@
           "date": "2026-11-11",
           "nav": "1.00487",
           "acumlt": "1.00487",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-12",
+          "nav": "1.00476",
+          "acumlt": "1.00476",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
