@@ -610,6 +610,13 @@
           "acumlt": "1.010601",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-13",
+          "nav": "1.010324",
+          "acumlt": "1.010324",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
         }
       ]
     }
