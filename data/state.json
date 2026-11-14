@@ -41,110 +41,28 @@
       ]
     },
     "2026-11-07": {
-      "at": "2026/11/7 02:30:03",
-      "gotNew": true,
+      "at": "2026/11/7 10:20:17",
+      "gotNew": false,
       "report": [
-        {
-          "code": "Z7003126000267",
-          "ok": true,
-          "name": "苏银理财恒源鑫泰量化日开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-05",
-          "totalRows": 81
-        },
-        {
-          "code": "Z7007126000099",
-          "ok": true,
-          "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-05",
-          "totalRows": 162
-        },
-        {
-          "code": "Z7001126000218",
-          "ok": true,
-          "name": "农银理财农银匠心·灵动14天理财产品第9期",
-          "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-06",
-          "totalRows": 92
-        },
-        {
-          "code": "Z7006926001306",
-          "ok": true,
-          "name": "浦银理财双周鑫最短持有期116号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-05",
-          "totalRows": 55
-        },
         {
           "code": "Z7002426000328",
           "ok": true,
           "name": "徽银理财安盈稳健日开7号理财产品260395",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-06",
           "totalRows": 27
-        },
-        {
-          "code": "Z7008926000543",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期33号理财产品",
-          "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-06",
-          "totalRows": 37
-        },
-        {
-          "code": "Z7006926001747",
-          "ok": true,
-          "name": "浦银理财益恒利周周定开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-02",
-          "totalRows": 16
-        },
-        {
-          "code": "Z7008926000548",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期34号理财产品",
-          "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-06",
-          "totalRows": 40
-        },
-        {
-          "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
-        },
-        {
-          "code": "Z7001026000481",
-          "ok": false,
-          "error": "获取产品详情失败: Z7001026000481"
-        },
-        {
-          "code": "Z7001026000529",
-          "ok": false,
-          "error": "获取产品详情失败: Z7001026000529"
         }
       ]
     },
     "2026-11-08": {
-      "at": "2026/11/8 05:51:17",
+      "at": "2026/11/8 09:57:19",
       "gotNew": false,
       "report": [
         {
           "code": "Z7003126000267",
-          "ok": true,
-          "name": "苏银理财恒源鑫泰量化日开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-05",
-          "totalRows": 81
+          "ok": false,
+          "error": "获取产品详情失败: Z7003126000267"
         },
         {
           "code": "Z7007126000099",
@@ -211,101 +129,12 @@
         },
         {
           "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
-        },
-        {
-          "code": "Z7001026000481",
-          "ok": false,
-          "error": "获取产品详情失败: Z7001026000481"
-        },
-        {
-          "code": "Z7001026000529",
-          "ok": false,
-          "error": "获取产品详情失败: Z7001026000529"
-        }
-      ]
-    },
-    "2026-11-09": {
-      "at": "2026/11/9 02:06:57",
-      "gotNew": true,
-      "report": [
-        {
-          "code": "Z7003126000267",
           "ok": true,
-          "name": "苏银理财恒源鑫泰量化日开1号",
-          "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-06",
-          "totalRows": 82
-        },
-        {
-          "code": "Z7007126000099",
-          "ok": true,
-          "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
+          "name": "招银理财招睿添利日开25号固定收益类理财计划",
           "shares": 1,
           "newRows": 0,
           "latestDate": "2026-11-05",
-          "totalRows": 162
-        },
-        {
-          "code": "Z7001126000218",
-          "ok": true,
-          "name": "农银理财农银匠心·灵动14天理财产品第9期",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 92
-        },
-        {
-          "code": "Z7006926001306",
-          "ok": true,
-          "name": "浦银理财双周鑫最短持有期116号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-05",
-          "totalRows": 55
-        },
-        {
-          "code": "Z7002426000328",
-          "ok": true,
-          "name": "徽银理财安盈稳健日开7号理财产品260395",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 27
-        },
-        {
-          "code": "Z7008926000543",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期33号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 37
-        },
-        {
-          "code": "Z7006926001747",
-          "ok": true,
-          "name": "浦银理财益恒利周周定开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-02",
-          "totalRows": 16
-        },
-        {
-          "code": "Z7008926000548",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期34号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-06",
-          "totalRows": 40
-        },
-        {
-          "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
+          "totalRows": 66
         },
         {
           "code": "Z7001026000481",
@@ -318,18 +147,14 @@
         },
         {
           "code": "Z7001026000529",
-          "ok": true,
-          "name": "中银理财-稳富全球配置日开",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-04",
-          "totalRows": 78
+          "ok": false,
+          "error": "获取产品详情失败: Z7001026000529"
         }
       ]
     },
-    "2026-11-10": {
-      "at": "2026/11/9 23:24:19",
-      "gotNew": true,
+    "2026-11-09": {
+      "at": "2026/11/9 16:48:43",
+      "gotNew": false,
       "report": [
         {
           "code": "Z7003126000267",
@@ -345,18 +170,18 @@
           "ok": true,
           "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
           "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-06",
-          "totalRows": 163
+          "newRows": 0,
+          "latestDate": "2026-11-05",
+          "totalRows": 162
         },
         {
           "code": "Z7001126000218",
           "ok": true,
           "name": "农银理财农银匠心·灵动14天理财产品第9期",
           "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-09",
-          "totalRows": 93
+          "newRows": 0,
+          "latestDate": "2026-11-06",
+          "totalRows": 92
         },
         {
           "code": "Z7006926001306",
@@ -369,12 +194,8 @@
         },
         {
           "code": "Z7002426000328",
-          "ok": true,
-          "name": "徽银理财安盈稳健日开7号理财产品260395",
-          "shares": 1,
-          "newRows": 1,
-          "latestDate": "2026-11-09",
-          "totalRows": 28
+          "ok": false,
+          "error": "徽银理财净值列表为空"
         },
         {
           "code": "Z7008926000543",
@@ -405,8 +226,12 @@
         },
         {
           "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
+          "ok": true,
+          "name": "招银理财招睿添利日开25号固定收益类理财计划",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-06",
+          "totalRows": 67
         },
         {
           "code": "Z7001026000481",
@@ -428,9 +253,60 @@
         }
       ]
     },
-    "2026-11-11": {
-      "at": "2026/11/11 02:40:39",
+    "2026-11-10": {
+      "at": "2026/11/10 16:21:11",
       "gotNew": true,
+      "report": [
+        {
+          "code": "Z7007126000099",
+          "ok": true,
+          "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-06",
+          "totalRows": 163
+        },
+        {
+          "code": "Z7006926001306",
+          "ok": true,
+          "name": "浦银理财双周鑫最短持有期116号理财产品",
+          "shares": 1,
+          "newRows": 1,
+          "latestDate": "2026-11-09",
+          "totalRows": 57
+        },
+        {
+          "code": "Z7001026000481",
+          "ok": true,
+          "name": "中银理财-稳富纯债14天持有期4号",
+          "shares": 1,
+          "newRows": 1,
+          "latestDate": "2026-11-06",
+          "totalRows": 50
+        },
+        {
+          "code": "Z7001026000529",
+          "ok": true,
+          "name": "中银理财-稳富全球配置日开",
+          "shares": 1,
+          "newRows": 1,
+          "latestDate": "2026-11-06",
+          "totalRows": 80
+        },
+        {
+          "code": "Z7006926001747",
+          "ok": true,
+          "name": "浦银理财益恒利周周定开1号",
+          "shares": 1,
+          "newRows": 1,
+          "latestDate": "2026-11-09",
+          "totalRows": 17
+        }
+      ]
+    },
+    "2026-11-11": {
+      "at": "2026/11/11 10:04:54",
+      "gotNew": false,
       "report": [
         {
           "code": "Z7003126000267",
@@ -447,8 +323,8 @@
           "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 165
+          "latestDate": "2026-11-09",
+          "totalRows": 164
         },
         {
           "code": "Z7001126000218",
@@ -461,12 +337,8 @@
         },
         {
           "code": "Z7006926001306",
-          "ok": true,
-          "name": "浦银理财双周鑫最短持有期116号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 58
+          "ok": false,
+          "error": "fetch failed"
         },
         {
           "code": "Z7002426000328",
@@ -488,12 +360,8 @@
         },
         {
           "code": "Z7006926001747",
-          "ok": true,
-          "name": "浦银理财益恒利周周定开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-09",
-          "totalRows": 17
+          "ok": false,
+          "error": "fetch failed"
         },
         {
           "code": "Z7008926000548",
@@ -507,40 +375,28 @@
         {
           "code": "Z7001626000675",
           "ok": false,
-          "error": "招银理财净值接口未返回数据"
+          "error": "net::ERR_CONNECTION_CLOSED at https://www.cmbchinawm.com/proDetail?prodTradeCode=132152A&prodClcMode=01&finType=P"
         },
         {
           "code": "Z7001026000481",
-          "ok": true,
-          "name": "中银理财-稳富纯债14天持有期4号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 52
+          "ok": false,
+          "error": "fetch failed"
         },
         {
           "code": "Z7001026000529",
-          "ok": true,
-          "name": "中银理财-稳富全球配置日开",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 82
+          "ok": false,
+          "error": "fetch failed"
         },
         {
           "code": "Z7008926000549",
-          "ok": true,
-          "name": "北银理财京华远见春系列智远21天持有期1号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 52
+          "ok": false,
+          "error": "fetch failed"
         }
       ]
     },
     "2026-11-12": {
-      "at": "2026/11/11 23:14:52",
-      "gotNew": true,
+      "at": "2026/11/12 09:23:31",
+      "gotNew": false,
       "report": [
         {
           "code": "Z7003126000267",
@@ -548,8 +404,8 @@
           "name": "苏银理财恒源鑫泰量化日开1号",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 84
+          "latestDate": "2026-11-11",
+          "totalRows": 85
         },
         {
           "code": "Z7007126000099",
@@ -565,7 +421,7 @@
           "ok": true,
           "name": "农银理财农银匠心·灵动14天理财产品第9期",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-11",
           "totalRows": 95
         },
@@ -583,119 +439,9 @@
           "ok": true,
           "name": "徽银理财安盈稳健日开7号理财产品260395",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-11",
           "totalRows": 30
-        },
-        {
-          "code": "Z7008926000543",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期33号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 39
-        },
-        {
-          "code": "Z7006926001747",
-          "ok": true,
-          "name": "浦银理财益恒利周周定开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-09",
-          "totalRows": 17
-        },
-        {
-          "code": "Z7008926000548",
-          "ok": true,
-          "name": "北银理财京华远见春系列诚享7天持有期34号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 42
-        },
-        {
-          "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
-        },
-        {
-          "code": "Z7001026000481",
-          "ok": true,
-          "name": "中银理财-稳富纯债14天持有期4号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 52
-        },
-        {
-          "code": "Z7001026000529",
-          "ok": true,
-          "name": "中银理财-稳富全球配置日开",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 82
-        },
-        {
-          "code": "Z7008926000549",
-          "ok": true,
-          "name": "北银理财京华远见春系列智远21天持有期1号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-10",
-          "totalRows": 52
-        }
-      ]
-    },
-    "2026-11-13": {
-      "at": "2026/11/13 00:39:02",
-      "gotNew": true,
-      "report": [
-        {
-          "code": "Z7003126000267",
-          "ok": true,
-          "name": "苏银理财恒源鑫泰量化日开1号",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-11",
-          "totalRows": 85
-        },
-        {
-          "code": "Z7007126000099",
-          "ok": true,
-          "name": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-11",
-          "totalRows": 166
-        },
-        {
-          "code": "Z7001126000218",
-          "ok": true,
-          "name": "农银理财农银匠心·灵动14天理财产品第9期",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-12",
-          "totalRows": 96
-        },
-        {
-          "code": "Z7006926001306",
-          "ok": true,
-          "name": "浦银理财双周鑫最短持有期116号理财产品",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-11",
-          "totalRows": 59
-        },
-        {
-          "code": "Z7002426000328",
-          "ok": true,
-          "name": "徽银理财安盈稳健日开7号理财产品260395",
-          "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-12",
-          "totalRows": 31
         },
         {
           "code": "Z7008926000543",
@@ -726,8 +472,12 @@
         },
         {
           "code": "Z7001626000675",
-          "ok": false,
-          "error": "招银理财净值接口未返回数据"
+          "ok": true,
+          "name": "招银理财招睿添利日开25号固定收益类理财计划",
+          "shares": 1,
+          "newRows": 0,
+          "latestDate": "2026-11-11",
+          "totalRows": 71
         },
         {
           "code": "Z7001026000481",
@@ -735,8 +485,8 @@
           "name": "中银理财-稳富纯债14天持有期4号",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-11",
-          "totalRows": 53
+          "latestDate": "2026-11-10",
+          "totalRows": 52
         },
         {
           "code": "Z7001026000529",
@@ -744,8 +494,8 @@
           "name": "中银理财-稳富全球配置日开",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-11",
-          "totalRows": 83
+          "latestDate": "2026-11-10",
+          "totalRows": 82
         },
         {
           "code": "Z7008926000549",
@@ -758,9 +508,24 @@
         }
       ]
     },
-    "2026-11-14": {
-      "at": "2026/11/14 02:37:56",
+    "2026-11-13": {
+      "at": "2026/11/13 11:01:48",
       "gotNew": true,
+      "report": [
+        {
+          "code": "Z7001426001893",
+          "ok": true,
+          "name": "阳光金日添利9号D",
+          "shares": 1,
+          "newRows": 1,
+          "latestDate": "2026-11-12",
+          "totalRows": 62
+        }
+      ]
+    },
+    "2026-11-14": {
+      "at": "2026/11/14 10:47:45",
+      "gotNew": false,
       "report": [
         {
           "code": "Z7003126000267",
@@ -785,7 +550,7 @@
           "ok": true,
           "name": "农银理财农银匠心·灵动14天理财产品第9期",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 97
         },
@@ -794,7 +559,7 @@
           "ok": true,
           "name": "浦银理财双周鑫最短持有期116号理财产品",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-12",
           "totalRows": 60
         },
@@ -803,7 +568,7 @@
           "ok": true,
           "name": "徽银理财安盈稳健日开7号理财产品260395",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 32
         },
@@ -812,7 +577,7 @@
           "ok": true,
           "name": "北银理财京华远见春系列诚享7天持有期33号理财产品",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 42
         },
@@ -830,7 +595,7 @@
           "ok": true,
           "name": "北银理财京华远见春系列诚享7天持有期34号理财产品",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 45
         },
@@ -866,7 +631,7 @@
           "ok": true,
           "name": "北银理财京华远见春系列智远21天持有期1号理财产品",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 55
         },
