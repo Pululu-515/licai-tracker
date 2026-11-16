@@ -770,7 +770,7 @@
       ]
     },
     "2026-11-16": {
-      "at": "2026/11/16 07:48:37",
+      "at": "2026/11/16 16:37:00",
       "gotNew": true,
       "report": [
         {
@@ -805,9 +805,9 @@
           "ok": true,
           "name": "浦银理财双周鑫最短持有期116号理财产品",
           "shares": 1,
-          "newRows": 0,
-          "latestDate": "2026-11-12",
-          "totalRows": 60
+          "newRows": 1,
+          "latestDate": "2026-11-13",
+          "totalRows": 61
         },
         {
           "code": "Z7002426000328",
@@ -850,7 +850,7 @@
           "ok": true,
           "name": "招银理财招睿添利日开25号固定收益类理财计划",
           "shares": 1,
-          "newRows": 1,
+          "newRows": 0,
           "latestDate": "2026-11-13",
           "totalRows": 73
         },
@@ -887,8 +887,8 @@
           "name": "阳光金日添利9号D",
           "shares": 1,
           "newRows": 0,
-          "latestDate": "2026-11-12",
-          "totalRows": 62
+          "latestDate": "2026-11-13",
+          "totalRows": 63
         }
       ]
     }
