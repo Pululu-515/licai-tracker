@@ -3,9 +3,9 @@
   "prodName": "阳光金日添利9号D",
   "orgName": "光大理财有限责任公司",
   "source": "cebwm.com（光大理财官网）+ chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/16 07:48:36",
-  "lastChangeAt": "2026/11/13 11:01:47",
-  "valuesSig": "b9553f57c78e2b01",
+  "lastUpdated": "2026/11/16 08:52:41",
+  "lastChangeAt": "2026/11/16 08:52:41",
+  "valuesSig": "1ac02122d2908ae1",
   "shares": {
     "EW8730D": {
       "rows": [
@@ -440,6 +440,13 @@
           "date": "2026-11-12",
           "nav": "1.01",
           "acumlt": "1.01",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-13",
+          "nav": "1.0101",
+          "acumlt": "1.0101",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
