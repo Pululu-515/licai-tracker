@@ -3,9 +3,9 @@
   "prodName": "农银理财农银匠心·灵动14天理财产品第9期",
   "orgName": "农银理财有限责任公司",
   "source": "abcwealth.com.cn（农银理财官网）",
-  "lastUpdated": "2026/11/23 07:09:04",
-  "lastChangeAt": "2026/11/21 06:47:33",
-  "valuesSig": "6a12680f991dd9ff",
+  "lastUpdated": "2026/11/24 09:33:23",
+  "lastChangeAt": "2026/11/24 09:33:23",
+  "valuesSig": "0f770cdcf813d8d8",
   "shares": {
     "NYJXLD1409G": {
       "rows": [
@@ -722,6 +722,13 @@
           "acumlt": "1.017292",
           "yieldPerMyriad": "0",
           "yieldSevenDay": "0.0155"
+        },
+        {
+          "date": "2026-11-23",
+          "nav": "1.017259",
+          "acumlt": "1.017259",
+          "yieldPerMyriad": "0",
+          "yieldSevenDay": "0.0415"
         }
       ]
     }

@@ -3,9 +3,9 @@
   "prodName": "浦银理财益恒利周周定开1号",
   "orgName": "浦银理财有限责任公司",
   "source": "chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/21 06:48:55",
-  "lastChangeAt": "2026/11/19 07:00:57",
-  "valuesSig": "ca0561530b2d549b",
+  "lastUpdated": "2026/11/24 09:34:21",
+  "lastChangeAt": "2026/11/24 09:34:21",
+  "valuesSig": "90bfb2d00a018d71",
   "shares": {
     "2501260791": {
       "rows": [
@@ -132,6 +132,13 @@
           "date": "2026-11-16",
           "nav": "1.0078",
           "acumlt": "1.0078",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-23",
+          "nav": "1.008",
+          "acumlt": "1.008",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
