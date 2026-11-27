@@ -3,9 +3,9 @@
   "prodName": "中银理财-稳富纯债14天持有期4号",
   "orgName": "中银理财有限责任公司",
   "source": "chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/25 08:07:37",
-  "lastChangeAt": "2026/11/25 08:07:37",
-  "valuesSig": "491963ab646dd43a",
+  "lastUpdated": "2026/11/27 07:58:21",
+  "lastChangeAt": "2026/11/27 07:58:21",
+  "valuesSig": "ea878498d9a4536c",
   "shares": {
     "CYQWFCZ14D4A": {
       "rows": [
@@ -433,6 +433,20 @@
           "date": "2026-11-23",
           "nav": "1.008901",
           "acumlt": "1.008901",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-24",
+          "nav": "1.008856",
+          "acumlt": "1.008856",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-25",
+          "nav": "1.008678",
+          "acumlt": "1.008678",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }

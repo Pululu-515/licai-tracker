@@ -3,9 +3,9 @@
   "prodName": "上银理财“领航精选”系列开放式理财产品WPLK26D0101期",
   "orgName": "上银理财有限责任公司",
   "source": "chinawealth.com.cn（中国理财网）",
-  "lastUpdated": "2026/11/25 08:04:15",
-  "lastChangeAt": "2026/11/24 09:32:49",
-  "valuesSig": "a992d2597a385282",
+  "lastUpdated": "2026/11/27 07:55:29",
+  "lastChangeAt": "2026/11/27 07:55:29",
+  "valuesSig": "7970ac6906821705",
   "shares": {
     "WPLK26D0101A": {
       "rows": [
@@ -1224,6 +1224,20 @@
           "date": "2026-11-23",
           "nav": "1.0261",
           "acumlt": "1.0261",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-24",
+          "nav": "1.0262",
+          "acumlt": "1.0262",
+          "yieldPerMyriad": "",
+          "yieldSevenDay": ""
+        },
+        {
+          "date": "2026-11-25",
+          "nav": "1.0256",
+          "acumlt": "1.0256",
           "yieldPerMyriad": "",
           "yieldSevenDay": ""
         }
